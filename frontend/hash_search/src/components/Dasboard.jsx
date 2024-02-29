@@ -1,12 +1,16 @@
 import React from "react";
 
-const Dashboard = ({results, index}) => {
+const Dashboard = ({resultados}) => {
     return (
         <div>
             <ul>
-                {results.map((result, index) => (
-                    <li key={index}>{result}</li>
-                ))}
+            {resultados && resultados.length > 0 && (
+                <ul>
+                    {resultados.map((resultado, index) => (
+                    <li key={index}>{resultado}</li>
+                    ))}
+                </ul>
+            )}
             </ul>
         </div>
     );
