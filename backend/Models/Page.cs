@@ -17,5 +17,6 @@ namespace backend.Models
         }
 
         public string[] WordsList { get => wordsList; set => wordsList = value; }
+        public int QuantidadeRegistros { get => wordsList.Length; }
     }
 }

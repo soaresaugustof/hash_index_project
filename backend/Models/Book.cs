@@ -7,6 +7,15 @@ namespace backend.Models
 {
     public class Book
     {
-        private List<
+        private Page[] pages;
+
+        public Book(double quantidadeRegistros, double registrosPorPagina)
+        {
+            int quantidadePaginas = (int) Math.Truncate(quantidadeRegistros / registrosPorPagina);
+            Pages = new Page[quantidadePaginas];
+        }
+
+        public Page[] Pages { get => pages; set => pages = value; }
+        public int quantidadePaginas { get => pages.Length; }
     }
 }
