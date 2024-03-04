@@ -7,15 +7,51 @@ namespace backend.Models
 {
     public class Book
     {
+        private int globalIndex;
         private Page[] pages;
 
         public Book(double quantidadeRegistros, double registrosPorPagina)
         {
-            int quantidadePaginas = (int) Math.Truncate(quantidadeRegistros / registrosPorPagina);
+            // DEBUG:
+            // Console.WriteLine(quantidadeRegistros);
+            // Console.WriteLine(registrosPorPagina);
+
+            globalIndex = 0;
+
+            // Obs: 'quantidadeRegistros' é equivalente ao tamanho do Array com os registros
+            int quantidadePaginas = (int)Math.Round(quantidadeRegistros / registrosPorPagina);
             Pages = new Page[quantidadePaginas];
         }
 
-        public Page[] Pages { get => pages; set => pages = value; }
-        public int quantidadePaginas { get => pages.Length; }
+        public string PrintPage()
+        {
+            string print = "[]";
+
+            foreach (var page in pages)
+            {
+                foreach (var word in page.WordsList)
+                {
+                    Console.WriteLine(word);
+                }
+            }
+
+            return print;
+        }
+
+        public void AddPage(Page page)
+        {
+            pages[globalIndex] = page;
+            globalIndex++;
+        }
+
+        public Page[] Pages
+        {
+            get => pages;
+            set => pages = value;
+        }
+
+        public int QuantidadePaginas => pages.Length;
+
+        public int QuantidadeRegistros => pages[0].QuantidadeRegistros;
     }
 }

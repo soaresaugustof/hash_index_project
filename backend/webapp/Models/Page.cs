@@ -6,17 +6,24 @@ using System.Threading.Tasks;
 namespace backend.Models
 {
     // A ideia da página é que seja uma estrutura com um limite de tuplas por página
-    
+
     public class Page
     {
         private string[] wordsList;
 
-        public Page(int quantidadeRegistros)
+        public Page(string[] words)
         {
-            WordsList = new string[quantidadeRegistros];
+            WordsList = words.ToArray();
         }
 
-        public string[] WordsList { get => wordsList; set => wordsList = value; }
-        public int QuantidadeRegistros { get => wordsList.Length; }
+        public string[] WordsList
+        {
+            get => wordsList;
+            set => wordsList = value;
+        }
+        public int QuantidadeRegistros
+        {
+            get => wordsList.Length;
+        }
     }
 }
