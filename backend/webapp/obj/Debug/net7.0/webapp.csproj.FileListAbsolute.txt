@@ -30,5 +30,4 @@ C:\Users\samue\OneDrive\Documentos\UNIFOR\Proj. Banco de Dados\AV1\hash_index_pr
 C:\Users\samue\OneDrive\Documentos\UNIFOR\Proj. Banco de Dados\AV1\hash_index_project\backend\webapp\obj\Debug\net7.0\webapp.pdb
 C:\Users\samue\OneDrive\Documentos\UNIFOR\Proj. Banco de Dados\AV1\hash_index_project\backend\webapp\obj\Debug\net7.0\webapp.genruntimeconfig.cache
 C:\Users\samue\OneDrive\Documentos\UNIFOR\Proj. Banco de Dados\AV1\hash_index_project\backend\webapp\obj\Debug\net7.0\ref\webapp.dll
-c:\Users\samue\OneDrive\Documentos\UNIFOR\Proj. Banco de Dados\AV1\hash_index_project\backend\webapp\obj\Debug\net7.0\webapp.sourcelink.json
-c:\Users\samue\OneDrive\Documentos\UNIFOR\Proj. Banco de Dados\AV1\hash_index_project\backend\webapp\obj\Debug\net7.0\webapp.csproj.Up2Date
+C:\Users\samue\OneDrive\Documentos\UNIFOR\Proj. Banco de Dados\AV1\hash_index_project\backend\webapp\obj\Debug\net7.0\webapp.csproj.CopyComplete

@@ -40,6 +40,7 @@ namespace backend.Models
 
         public void AddPage(Page page)
         {
+            Console.WriteLine(page);
             pages[globalIndex] = page;
             globalIndex++;
         }
@@ -52,6 +53,6 @@ namespace backend.Models
 
         public int QuantidadePaginas => pages.Length;
 
-        public int QuantidadeRegistros => pages[0].QuantidadeRegistros;
+        public int QuantidadeRegistrosPagina => pages[0].QuantidadeRegistros;
     }
 }
