@@ -1,6 +1,7 @@
 using System.Text;
 using backend.Models;
 using Microsoft.AspNetCore.Mvc;
+using webapp.Models.HashTable;
 
 namespace webapp.Controllers;
 
@@ -10,6 +11,7 @@ public class HashController : ControllerBase
 {
     private readonly string projectPath = Environment.CurrentDirectory;
     private Book book;
+    private HashTable hashTable;
 
     public HashController() { }
 
@@ -55,7 +57,13 @@ public class HashController : ControllerBase
 
         // DEBUG:
         // Console.WriteLine(book.QuantidadePaginas);
+        InitHashTable(lines.Length, 2);
 
         return book.Pages;
+    }
+
+    public void InitHashTable(double quantidadeTotalRegistros, int quantidadeRegistrosPorBuckets)
+    {
+        this.hashTable = new HashTable(quantidadeTotalRegistros, quantidadeRegistrosPorBuckets);
     }
 }
