@@ -1,6 +1,7 @@
 using System.Text;
 using backend.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using webapp.Models.HashTable;
 
 namespace webapp.Controllers;
@@ -10,17 +11,16 @@ namespace webapp.Controllers;
 public class HashController : ControllerBase
 {
     private readonly string projectPath = Environment.CurrentDirectory;
-    private Book book;
-    private HashTable hashTable;
-
-    public HashController() { }
+    private static Book? book;
+    private static HashTable? hashTable;
 
     // InitBook
     [HttpPost]
-    public Page[] InitBook()
+    public ActionResult<Page[]> InitBookAndHashTable()
     {
+        // InitBook
         // 1. Stream Reader lê o arquivo e preenche um array com ele
-        Console.WriteLine(projectPath);
+        // Console.WriteLine(projectPath);
 
         string[] lines;
         var list = new List<string>();
@@ -44,26 +44,36 @@ public class HashController : ControllerBase
 
         // 2. Cria a entidade Book baseada no valor do tamanho do Array
         // TODO: Criar um atributo de Query String que torne esse "100" alterável
-        this.book = new Book(lines.Length, 100);
+        book = new Book(lines.Length, 100);
 
         // DEBUG:
-        // Console.WriteLine(this.book.QuantidadePaginas);
+        // Console.WriteLine(book.QuantidadePaginas);
 
-        for (int i = 0; i < lines.Length; i += this.book.Pages[0].QuantidadeRegistros)
+        for (int i = 0; i < lines.Length; i += book.Pages[0].QuantidadeRegistros)
         {
             Page page = new(lines.Skip(i).Take(100).ToArray());
-            this.book.AddPage(page);
+            book.AddPage(page);
         }
 
         // DEBUG:
         // Console.WriteLine(book.QuantidadePaginas);
-        InitHashTable(lines.Length, 2);
+
+        // Init hash table
+        // TODO: Criar um atributo de Query String que torne esse "2" alterável
+        hashTable = new HashTable(lines.Length, 2);
 
         return book.Pages;
     }
 
-    public void InitHashTable(double quantidadeTotalRegistros, int quantidadeRegistrosPorBuckets)
+    [HttpGet("book")]
+    public ActionResult<Book> GetBook()
     {
-        this.hashTable = new HashTable(quantidadeTotalRegistros, quantidadeRegistrosPorBuckets);
+        return book;
+    }
+
+    [HttpGet("table")]
+    public ActionResult<HashTable> GetHashTable()
+    {
+        return hashTable;
     }
 }

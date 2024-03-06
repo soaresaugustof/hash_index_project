@@ -10,21 +10,21 @@ namespace webapp.Models.HashTable
     {
         // key = Valor de Hash
         // value = Página
-        private readonly Cell<double, int>[] registrosBucket;
+        private readonly Cell<int, int>[] bucket;
         private int index;
         private Bucket next;
 
         public Bucket(int capacidadeMaxima)
         {
-            this.registrosBucket = new Cell<double, int>[capacidadeMaxima];
+            this.bucket = new Cell<int, int>[capacidadeMaxima];
             this.index = 0;
         }
 
-        public void AddRegistro(double valorHash, int pagina)
+        public void AddRegistro(int valorHash, int pagina)
         {
             try
             {
-                registrosBucket[index].AddCell(valorHash, pagina);
+                bucket[index].AddCell(valorHash, pagina);
                 index++;
             }
             catch (System.NullReferenceException)
