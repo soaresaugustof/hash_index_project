@@ -34,13 +34,14 @@ namespace webapp.Models.HashTable
         // Função Hash que será utilizada para determinar qual bucket será selecionado
         private int FuncaoHash(string key)
         {
-            ToNumber(key);
+            uint keyNumber = ToNumber(key);
+            int hashValue = (int)(keyNumber + 1) % buckets.Length;
+            Console.WriteLine("hash value: " + hashValue);
 
-            //TODO: Criar a funcao hash
             return 0;
         }
 
-        private string ToNumber(string key)
+        private uint ToNumber(string key)
         {
             char[] chars = key.ToCharArray();
             StringBuilder auxKey = new StringBuilder("");
@@ -48,13 +49,13 @@ namespace webapp.Models.HashTable
             foreach (var c in chars)
             {
                 Console.Write(c + " ");
-                auxKey.Append(AddLeftZeroIfSmallNumber(c));
+                auxKey.Append(c);
             }
             // DEBUG:
             // Console.WriteLine();
-            // Console.WriteLine(auxKey);
+            Console.WriteLine(auxKey);
 
-            return auxKey.ToString();
+            return Convert.ToUInt32(auxKey.ToString());
         }
 
         private string AddLeftZeroIfSmallNumber(char c) => c < 100 ? "0" + (short)c : "" + (short)c;

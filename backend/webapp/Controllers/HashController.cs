@@ -60,8 +60,8 @@ public class HashController : ControllerBase
         // Console.WriteLine(book.QuantidadePaginas);
 
         // Init hash table
-        // TODO: Criar um atributo de Query String que torne esse "2" alterável
-        hashTable = new HashTable(lines.Length, 2);
+        // TODO: Criar um atributo de Query String que torne esse "10" alterável
+        hashTable = new HashTable(lines.Length, 10);
 
         return book.Pages;
     }
