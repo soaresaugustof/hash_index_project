@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Text;
 using backend.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -66,7 +67,14 @@ public class HashController : ControllerBase
     }
 
     [HttpPost("fill")]
-    public ActionResult<HashTable> FillHashTable() { }
+    public ActionResult<HashTable> FillHashTable()
+    {
+        string word = book.Pages[0].WordsList[99];
+
+        hashTable.InsertBucket(word);
+
+        return null;
+    }
 
     [HttpGet("book")]
     public ActionResult<Book> GetBook()
