@@ -65,6 +65,9 @@ public class HashController : ControllerBase
         return book.Pages;
     }
 
+    [HttpPost("fill")]
+    public ActionResult<HashTable> FillHashTable() { }
+
     [HttpGet("book")]
     public ActionResult<Book> GetBook()
     {

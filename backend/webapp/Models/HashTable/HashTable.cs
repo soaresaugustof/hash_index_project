@@ -24,11 +24,11 @@ namespace webapp.Models.HashTable
 
         // Toda vez que adicionarmos um novo dado à HashTable, com a função hash,
         // criamos um novo Bucket com um determinado tamanho (registros por bucket)
-        public void InsertBucket( /* chave */
+        public void InsertBucket( /* TODO: chave */
         )
         {
             int indiceHash =
-                FuncaoHash( /* chave */
+                FuncaoHash( /* TODO: chave */
                 );
             buckets[indiceHash] = new Bucket(registrosPorBucket);
         }
@@ -41,6 +41,9 @@ namespace webapp.Models.HashTable
             return 0;
         }
 
-        public Bucket[] Buckets { get; }
+        public Bucket[] Buckets
+        {
+            get => buckets;
+        }
     }
 }
