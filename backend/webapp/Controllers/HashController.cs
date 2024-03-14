@@ -16,8 +16,8 @@ public class HashController : ControllerBase
     private static HashTable? hashTable;
 
     // InitBook
-    [HttpPost]
-    public ActionResult<Page[]> InitBookAndHashTable()
+    [HttpPost("book")]
+    public ActionResult<Page[]> InitBook()
     {
         // InitBook
         // 1. Stream Reader lê o arquivo e preenche um array com ele
@@ -61,17 +61,24 @@ public class HashController : ControllerBase
 
         // Init hash table
         // TODO: Criar um atributo de Query String que torne esse "10" alterável
-        hashTable = new HashTable(lines.Length, 10);
+        InitHashTable(lines);
 
         return book.Pages;
+    }
+
+    [HttpPost("table")]
+    public ActionResult<HashTable> InitHashTable(string[] lines)
+    {
+        hashTable = new HashTable(lines.Length, 100);
+
+        return hashTable;
     }
 
     [HttpPost("fill")]
     public ActionResult<HashTable> FillHashTable()
     {
-        string word = book.Pages[0].WordsList[99];
+        // TODO: Transformar em loop
 
-        hashTable.InsertBucket(word);
 
         return null;
     }

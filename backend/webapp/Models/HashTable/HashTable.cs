@@ -34,28 +34,32 @@ namespace webapp.Models.HashTable
         // Função Hash que será utilizada para determinar qual bucket será selecionado
         private int FuncaoHash(string key)
         {
-            uint keyNumber = ToNumber(key);
-            int hashValue = (int)(keyNumber + 1) % buckets.Length;
+            int keyNumber = ToNumber(key);
+            int hashValue = (keyNumber + 1) % buckets.Length;
+            Console.WriteLine(buckets.Length);
             Console.WriteLine("hash value: " + hashValue);
 
             return 0;
         }
 
-        private uint ToNumber(string key)
+        private int ToNumber(string key)
         {
             char[] chars = key.ToCharArray();
-            StringBuilder auxKey = new StringBuilder("");
+            // StringBuilder auxKey = new StringBuilder("");
+            int sum = 0;
+            int primeNum = 579;
 
+            // somatório com números primos
             foreach (var c in chars)
             {
                 Console.Write(c + " ");
-                auxKey.Append(c);
+                sum += c * primeNum;
             }
             // DEBUG:
             // Console.WriteLine();
-            Console.WriteLine(auxKey);
+            Console.WriteLine(sum);
 
-            return Convert.ToUInt32(auxKey.ToString());
+            return sum;
         }
 
         private string AddLeftZeroIfSmallNumber(char c) => c < 100 ? "0" + (short)c : "" + (short)c;
