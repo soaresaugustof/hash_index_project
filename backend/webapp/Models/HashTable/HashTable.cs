@@ -25,10 +25,12 @@ namespace webapp.Models.HashTable
 
         // Toda vez que adicionarmos um novo dado à HashTable, com a função hash,
         // criamos um novo Bucket com um determinado tamanho (registros por bucket)
-        public void InsertBucket(string key)
+        public void InsertBucket(string key, int page)
         {
             int indiceHash = FuncaoHash(key);
+            Console.WriteLine("indiceHash: " + indiceHash);
             buckets[indiceHash] = new Bucket(registrosPorBucket);
+            buckets[indiceHash].AddRegistro(key, page);
         }
 
         // Função Hash que será utilizada para determinar qual bucket será selecionado
@@ -36,10 +38,10 @@ namespace webapp.Models.HashTable
         {
             int keyNumber = ToNumber(key);
             int hashValue = (keyNumber + 1) % buckets.Length;
-            Console.WriteLine(buckets.Length);
-            Console.WriteLine("hash value: " + hashValue);
+            Console.WriteLine("Buckets Length: " + buckets.Length);
+            Console.WriteLine("FuncaoHash // hash value: " + hashValue);
 
-            return 0;
+            return hashValue;
         }
 
         private int ToNumber(string key)
@@ -57,7 +59,7 @@ namespace webapp.Models.HashTable
             }
             // DEBUG:
             // Console.WriteLine();
-            Console.WriteLine(sum);
+            Console.WriteLine("\nToNumber // soma: " + sum);
 
             return sum;
         }

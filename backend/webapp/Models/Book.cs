@@ -40,7 +40,6 @@ namespace backend.Models
 
         public void AddPage(Page page)
         {
-            Console.WriteLine(page);
             pages[globalIndex] = page;
             globalIndex++;
         }

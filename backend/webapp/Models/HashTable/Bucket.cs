@@ -10,7 +10,7 @@ namespace webapp.Models.HashTable
     {
         // key = Valor de Hash
         // value = Página
-        private readonly Cell<string, int>[] bucket;
+        private Cell<string, int>[] bucket;
         private int index;
         private Bucket next;
 
@@ -24,14 +24,19 @@ namespace webapp.Models.HashTable
         {
             try
             {
-                bucket[index].AddCell(valorHashKey, pagina);
+                bucket[index] = new Cell<string, int>(valorHashKey, pagina);
                 index++;
             }
             catch (System.NullReferenceException)
             {
-                Console.WriteLine("\n-------> erro null pointer exception\n");
+                Console.WriteLine("\n-------> erro - BUCKET OVERFLOW\n");
                 throw;
             }
+        }
+
+        public Cell<string, int> GetRegistro(int index)
+        {
+            return bucket[index];
         }
     }
 }

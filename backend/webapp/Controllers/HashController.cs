@@ -15,6 +15,9 @@ public class HashController : ControllerBase
     private static Book? book;
     private static HashTable? hashTable;
 
+    // public HashController()
+    // : base(client) { }
+
     // InitBook
     [HttpPost("book")]
     public ActionResult<Page[]> InitBook()
@@ -77,10 +80,34 @@ public class HashController : ControllerBase
     [HttpPost("fill")]
     public ActionResult<HashTable> FillHashTable()
     {
-        // TODO: Transformar em loop
+        // int ii = 0;
+        // int jj = 92;
 
+        // // TODO: Transformar em loop
+        // var wordd = book.Pages[ii].WordsList[jj];
 
-        return null;
+        // hashTable.InsertBucket(wordd, ii);
+
+        // Console.WriteLine("Buckets[57]: " + hashTable.Buckets[57]);
+        // Console.WriteLine("Buckets[58]: " + hashTable.Buckets[58]);
+        // Console.WriteLine(
+        //     "Buckets[59]: indice: "
+        //         + hashTable.Buckets[59].GetRegistro(0).HashValue
+        //         + " // pagina: "
+        //         + hashTable.Buckets[59].GetRegistro(0).Pagina
+        // );
+
+        for (int i = 0; i < book.Pages.Length; i++)
+        {
+            for (int j = 0; j < book.Pages[i].WordsList.Length; j++)
+            {
+                string word = book.Pages[i].WordsList[j];
+
+                hashTable.InsertBucket(word, i);
+            }
+        }
+
+        return hashTable;
     }
 
     [HttpGet("book")]

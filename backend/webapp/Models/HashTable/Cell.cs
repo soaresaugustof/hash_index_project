@@ -7,10 +7,13 @@ namespace webapp.Models.HashTable
 {
     public class Cell<TKey, TValue>
     {
+        private TKey hashValue;
+        private TValue pagina;
+
         public Cell(TKey hashValue, TValue pagina)
         {
-            HashValue = hashValue;
-            Pagina = pagina;
+            this.HashValue = hashValue;
+            this.Pagina = pagina;
         }
 
         public Cell<TKey, TValue> AddCell(TKey hashValue, TValue pagina)
@@ -19,9 +22,17 @@ namespace webapp.Models.HashTable
         }
 
         // key
-        public TKey HashValue { get; }
+        public TKey HashValue
+        {
+            get => hashValue;
+            private set => hashValue = value;
+        }
 
         // value
-        public TValue Pagina { get; }
+        public TValue Pagina
+        {
+            get => pagina;
+            private set => pagina = value;
+        }
     }
 }
