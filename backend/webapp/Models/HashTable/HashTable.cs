@@ -41,7 +41,7 @@ namespace webapp.Models.HashTable
 
             wordPage = buckets[indiceHash].GetWordPage(word);
 
-            while (wordPage == null)
+            while (wordPage == null && bucketAddressRef.Next != null)
             {
                 bucketAddressRef = bucketAddressRef.Next;
                 wordPage = bucketAddressRef.GetWordPage(word);
