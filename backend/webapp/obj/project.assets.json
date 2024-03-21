@@ -474,11 +474,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\augusto.soares\\Desktop\\Augusto\\trabalhosFaculdade\\hash_index_project\\backend\\webapp\\webapp.csproj",
+      "projectUniqueName": "C:\\Users\\samue\\OneDrive\\Documentos\\UNIFOR\\Proj. Banco de Dados\\AV1\\hash_index_project\\backend\\webapp\\webapp.csproj",
       "projectName": "webapp",
-      "projectPath": "C:\\Users\\augusto.soares\\Desktop\\Augusto\\trabalhosFaculdade\\hash_index_project\\backend\\webapp\\webapp.csproj",
-      "packagesPath": "C:\\Users\\augusto.soares\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\augusto.soares\\Desktop\\Augusto\\trabalhosFaculdade\\hash_index_project\\backend\\webapp\\obj\\",
+      "projectPath": "C:\\Users\\samue\\OneDrive\\Documentos\\UNIFOR\\Proj. Banco de Dados\\AV1\\hash_index_project\\backend\\webapp\\webapp.csproj",
+      "packagesPath": "C:\\Users\\samue\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\samue\\OneDrive\\Documentos\\UNIFOR\\Proj. Banco de Dados\\AV1\\hash_index_project\\backend\\webapp\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\augusto.soares\\AppData\\Roaming\\NuGet\\NuGet.Config"
