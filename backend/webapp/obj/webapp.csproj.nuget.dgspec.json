@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\UNIFOR\\CC7\\Proj. Banco de Dados\\AV1\\hash_index_project\\backend\\webapp\\webapp.csproj": {}
+    "C:\\Users\\samue\\OneDrive\\Documentos\\UNIFOR\\Proj. Banco de Dados\\AV1\\hash_index_project\\backend\\webapp\\webapp.csproj": {}
   },
   "projects": {
-    "D:\\UNIFOR\\CC7\\Proj. Banco de Dados\\AV1\\hash_index_project\\backend\\webapp\\webapp.csproj": {
+    "C:\\Users\\samue\\OneDrive\\Documentos\\UNIFOR\\Proj. Banco de Dados\\AV1\\hash_index_project\\backend\\webapp\\webapp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\UNIFOR\\CC7\\Proj. Banco de Dados\\AV1\\hash_index_project\\backend\\webapp\\webapp.csproj",
+        "projectUniqueName": "C:\\Users\\samue\\OneDrive\\Documentos\\UNIFOR\\Proj. Banco de Dados\\AV1\\hash_index_project\\backend\\webapp\\webapp.csproj",
         "projectName": "webapp",
-        "projectPath": "D:\\UNIFOR\\CC7\\Proj. Banco de Dados\\AV1\\hash_index_project\\backend\\webapp\\webapp.csproj",
+        "projectPath": "C:\\Users\\samue\\OneDrive\\Documentos\\UNIFOR\\Proj. Banco de Dados\\AV1\\hash_index_project\\backend\\webapp\\webapp.csproj",
         "packagesPath": "C:\\Users\\samue\\.nuget\\packages\\",
-        "outputPath": "D:\\UNIFOR\\CC7\\Proj. Banco de Dados\\AV1\\hash_index_project\\backend\\webapp\\obj\\",
+        "outputPath": "C:\\Users\\samue\\OneDrive\\Documentos\\UNIFOR\\Proj. Banco de Dados\\AV1\\hash_index_project\\backend\\webapp\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\samue\\AppData\\Roaming\\NuGet\\NuGet.Config"
