@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using backend.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace webapp.Models.HashTable
 {
@@ -33,6 +36,38 @@ namespace webapp.Models.HashTable
                 // Console.WriteLine("\n\n----> COLISÃO!!!!!\n\n");
                 throw;
             }
+        }
+
+        public int? GetWordPage(string word)
+        {
+            int? wordPage = null;
+
+            foreach (var item in BucketList)
+            {
+                if (item != null && item.HashValue.Equals(word))
+                {
+                    wordPage = item.Pagina;
+                    return wordPage;
+                }
+            }
+
+            throw new Exception();
+        }
+
+        public bool Contains(string word)
+        {
+            bool wordExists = false;
+
+            foreach (var item in BucketList)
+            {
+                if (item != null && item.HashValue.Equals(word))
+                {
+                    wordExists = true;
+                    break;
+                }
+            }
+
+            return wordExists;
         }
 
         public Cell<string, int> GetRegistro(int index)

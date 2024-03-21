@@ -469,19 +469,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\samue\\.nuget\\packages\\": {}
+    "C:\\Users\\samuel.zaire\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\UNIFOR\\CC7\\Proj. Banco de Dados\\AV1\\hash_index_project\\backend\\webapp\\webapp.csproj",
+      "projectUniqueName": "C:\\Users\\samuel.zaire\\Downloads\\temp\\unifor\\hash_index_project\\backend\\webapp\\webapp.csproj",
       "projectName": "webapp",
-      "projectPath": "D:\\UNIFOR\\CC7\\Proj. Banco de Dados\\AV1\\hash_index_project\\backend\\webapp\\webapp.csproj",
-      "packagesPath": "C:\\Users\\samue\\.nuget\\packages\\",
-      "outputPath": "D:\\UNIFOR\\CC7\\Proj. Banco de Dados\\AV1\\hash_index_project\\backend\\webapp\\obj\\",
+      "projectPath": "C:\\Users\\samuel.zaire\\Downloads\\temp\\unifor\\hash_index_project\\backend\\webapp\\webapp.csproj",
+      "packagesPath": "C:\\Users\\samuel.zaire\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\samuel.zaire\\Downloads\\temp\\unifor\\hash_index_project\\backend\\webapp\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\samue\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\samuel.zaire\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net7.0"

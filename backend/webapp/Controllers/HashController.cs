@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Diagnostics;
 using System.Text;
 using backend.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,7 @@ public class HashController : ControllerBase
     private readonly string projectPath = Environment.CurrentDirectory;
     private static Book? book;
     private static HashTable? hashTable;
+    private Stopwatch watch;
 
     int parameter = 100;
 
@@ -104,23 +106,170 @@ public class HashController : ControllerBase
         return book;
     }
 
+    [HttpGet("book/{id:int}")]
+    public ActionResult<Page> GetPageById(int id)
+    {
+        return book.Pages[id];
+    }
+
     [HttpGet("table")]
     public ActionResult<HashTable> GetHashTable() => hashTable;
 
     [HttpGet("table/{id:int}")]
-    public ActionResult<Bucket> GetHashTableById(int id) => hashTable.Buckets[id];
+    public ActionResult<Bucket> GetBucketById(int id) => hashTable.Buckets[id];
 
-    // UTILs Methods
+    [HttpGet("{word}")]
+    public ActionResult<object> GetWordByHashIndex(string word)
+    {
+        watch = new Stopwatch();
+        string formatTimeSpan = null;
+
+        watch.Start();
+
+        // Console.WriteLine("\nword: " + word + "\n");
+
+        // int wordHash = hashTable.FuncaoHash(word);
+
+        // Console.WriteLine("\nwordHash: " + wordHash + "\n");
+
+        // Bucket searchBkt = hashTable.Buckets[wordHash];
+
+        // int? wordPage = searchBkt.GetWordPage(word);
+
+        int? foundWordPage = hashTable.SearchWordPage(word);
+
+        // Lógica: Se a página obtiver valor nulo, significa que nenhuma palavra foi encontrada na página.
+        // Caso contrário, se a página obtiver valor diferente de nulo, significa que a palavra foi encontrada e
+        // sua respectiva página também.
+
+        if (foundWordPage == null)
+        {
+            watch.Stop();
+            formatTimeSpan = FormatedTimeSpan();
+
+            return NotFound(
+                new
+                {
+                    status = 404,
+                    description = "Erro - Palavra Não Econtrada",
+                    searchWord = word,
+                    message = $"Não foi possível encontrar a palavra \"{word}\" no Bucket atual. Verifique a entrada solicitada e Tente novamente.",
+                    runtime = formatTimeSpan
+                }
+            );
+        }
+
+        Page page = book.Pages[(int)foundWordPage];
+        string foundWord = "";
+
+        foreach (var item in page.WordsList)
+        {
+            if (item.Equals(word))
+            {
+                foundWord = word;
+                break;
+            }
+        }
+
+        // Page foundWordPage = book.Pages[(int)wordPage];
+
+
+
+        // TODO: Transformar em um método da classe Bucket
+        // foreach (var item in foundWordPage.WordsList)
+        // {
+        //     if (item.Equals(word))
+        //     {
+        //         foundWord = word;
+        //         break;
+        //     }
+        // }
+
+        watch.Stop();
+        formatTimeSpan = FormatedTimeSpan();
+
+        // "foundWord" captalizado para fins de DEBUG
+        return foundWord != null
+            ? Ok(
+                new
+                {
+                    status = 200,
+                    description = "Palavra Encontrada",
+                    searchWord = foundWord.ToUpper(),
+                    message = $"A palavra \"{foundWord.ToUpper()}\" foi encontrada no Bucket Atual",
+                    runtime = formatTimeSpan
+                }
+            )
+            : NoContent();
+    }
+
+    [HttpGet("common/{word}")]
+    public ActionResult GetWordCommon(string word)
+    {
+        watch = new Stopwatch();
+        string formatTimeSpan = null;
+
+        watch.Start();
+
+        string foundWord = null;
+
+        foreach (var page in book.Pages)
+        {
+            foreach (var wordInList in page.WordsList)
+            {
+                if (wordInList.Equals(word))
+                {
+                    foundWord = wordInList;
+                    break;
+                }
+            }
+        }
+
+        watch.Stop();
+        formatTimeSpan = FormatedTimeSpan();
+
+        return foundWord != null
+            ? Ok(
+                new
+                {
+                    status = 200,
+                    description = "Palavra Encontrada",
+                    searchWord = foundWord.ToUpper(),
+                    message = $"A palavra \"{foundWord.ToUpper()}\" foi encontrada no Bucket Atual",
+                    runtime = formatTimeSpan
+                }
+            )
+            : NoContent();
+    }
+
+    // *** UTILs Methods ***
+    private string FormatedTimeSpan()
+    {
+        TimeSpan ts = watch.Elapsed;
+        return String.Format(
+            "{0:00}:{1:00}:{2:00}.{3:00}{4:00}{5:00}ms",
+            ts.Hours,
+            ts.Minutes,
+            ts.Seconds,
+            ts.Milliseconds,
+            ts.Microseconds,
+            ts.Nanoseconds
+        );
+    }
+
     private bool IsHashTableEmpty()
     {
-        int counter = 0;
+        bool flag = true;
 
         for (int i = 0; i < hashTable.Buckets.Length; i++)
         {
             if (hashTable.Buckets[i] != null)
-                counter++;
+            {
+                flag = false;
+                break;
+            }
         }
 
-        return counter == 0;
+        return flag;
     }
 }

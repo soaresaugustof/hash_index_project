@@ -31,6 +31,27 @@ namespace webapp.Models.HashTable
 
         // Toda vez que adicionarmos um novo dado à HashTable, com a função hash,
         // criamos um novo Bucket com um determinado tamanho (registros por bucket)
+
+        public int? SearchWordPage(string word)
+        {
+            int? wordPage;
+            int indiceHash = FuncaoHash(word);
+
+            try
+            {
+                wordPage = buckets[indiceHash].GetWordPage(word);
+            }
+            catch (Exception)
+            {
+                Bucket bucketAddressRef = buckets[indiceHash];
+
+                bucketAddressRef = bucketAddressRef.Next;
+                wordPage = bucketAddressRef.GetWordPage(word);
+            }
+
+            return wordPage;
+        }
+
         public void InsertBucket(string key, int page)
         {
             int indiceHash = FuncaoHash(key);
@@ -51,9 +72,7 @@ namespace webapp.Models.HashTable
                 Bucket bucketAddressRef = buckets[indiceHash];
 
                 while (bucketAddressRef.Next != null)
-                {
                     bucketAddressRef = bucketAddressRef.Next;
-                }
 
                 // Lógica: Se o bucket não foi completamente preenchido, será adicionado
                 // um novo registro. Caso contrário, será criado um novo registro e adicionado
@@ -77,7 +96,7 @@ namespace webapp.Models.HashTable
         }
 
         // Função Hash que será utilizada para determinar qual bucket será selecionado
-        private int FuncaoHash(string key)
+        public int FuncaoHash(string key)
         {
             int keyNumber = ToNumber(key);
             int hashValue = (keyNumber + 1) % buckets.Length;
