@@ -119,7 +119,7 @@ public class HashController : ControllerBase
     public ActionResult<Bucket> GetBucketById(int id) => hashTable.Buckets[id];
 
     [HttpGet("{word}")]
-    public ActionResult<object> GetWordByHashIndex(string word)
+    public ActionResult<object> GetWordByHashindex(string word)
     {
         watch = new Stopwatch();
         string formatTimeSpan = null;
