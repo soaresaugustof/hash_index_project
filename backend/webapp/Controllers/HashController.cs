@@ -23,6 +23,10 @@ public class HashController : ControllerBase
     // : base(client) { }
 
     // InitBook
+    /// <summary>
+    /// Método prioritário. Deve ser o <b>PRIMEIRO</b> método a ser chamado
+    /// </summary>
+    /// <returns>Lista de páginas baseada no input do arquivo TXT</returns>
     [HttpPost("book")]
     public ActionResult<Page[]> InitBook()
     {
@@ -81,6 +85,10 @@ public class HashController : ControllerBase
         return hashTable;
     }
 
+    /// <summary>
+    /// Método prioritário. Deve ser o <b>SEGUNDO</b> método a ser chamado
+    /// </summary>
+    /// <returns>Tabela Hash com os valores e índices baseados no input do arquivo TXT</returns>
     [HttpPost("fill")]
     public ActionResult<HashTable> FillHashTable()
     {
@@ -123,26 +131,28 @@ public class HashController : ControllerBase
     {
         watch = new Stopwatch();
         string formatTimeSpan = null;
-
         watch.Start();
 
-        // Console.WriteLine("\nword: " + word + "\n");
+        int? foundWordPage = null;
+        string? foundWord = null;
 
-        // int wordHash = hashTable.FuncaoHash(word);
+        try
+        {
+            foundWordPage = hashTable.SearchWordPage(word);
+            Console.WriteLine("\n\n\n\n" + foundWordPage + "\n\n\n\n");
 
-        // Console.WriteLine("\nwordHash: " + wordHash + "\n");
+            Page page = book.Pages[(int)foundWordPage];
 
-        // Bucket searchBkt = hashTable.Buckets[wordHash];
-
-        // int? wordPage = searchBkt.GetWordPage(word);
-
-        int? foundWordPage = hashTable.SearchWordPage(word);
-
-        // Lógica: Se a página obtiver valor nulo, significa que nenhuma palavra foi encontrada na página.
-        // Caso contrário, se a página obtiver valor diferente de nulo, significa que a palavra foi encontrada e
-        // sua respectiva página também.
-
-        if (foundWordPage == null)
+            foreach (var item in page.WordsList)
+            {
+                if (item.Equals(word))
+                {
+                    foundWord = word;
+                    break;
+                }
+            }
+        }
+        catch (NullReferenceException)
         {
             watch.Stop();
             formatTimeSpan = FormatedTimeSpan();
@@ -159,32 +169,6 @@ public class HashController : ControllerBase
             );
         }
 
-        Page page = book.Pages[(int)foundWordPage];
-        string? foundWord = null;
-
-        foreach (var item in page.WordsList)
-        {
-            if (item.Equals(word))
-            {
-                foundWord = word;
-                break;
-            }
-        }
-
-        // Page foundWordPage = book.Pages[(int)wordPage];
-
-
-
-        // TODO: Transformar em um método da classe Bucket
-        // foreach (var item in foundWordPage.WordsList)
-        // {
-        //     if (item.Equals(word))
-        //     {
-        //         foundWord = word;
-        //         break;
-        //     }
-        // }
-
         watch.Stop();
         formatTimeSpan = FormatedTimeSpan();
 
@@ -196,6 +180,7 @@ public class HashController : ControllerBase
                     status = 200,
                     description = "Palavra Encontrada",
                     searchWord = foundWord.ToUpper(),
+                    wordPage = foundWordPage,
                     message = $"A palavra \"{foundWord.ToUpper()}\" foi encontrada no Bucket Atual",
                     runtime = formatTimeSpan
                 }

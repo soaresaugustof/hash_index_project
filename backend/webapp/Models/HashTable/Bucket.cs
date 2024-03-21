@@ -51,7 +51,7 @@ namespace webapp.Models.HashTable
                 }
             }
 
-            throw new Exception();
+            throw new IndexOutOfRangeException();
         }
 
         public bool Contains(string word)

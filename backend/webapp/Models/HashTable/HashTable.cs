@@ -34,20 +34,23 @@ namespace webapp.Models.HashTable
 
         public int? SearchWordPage(string word)
         {
-            int? wordPage;
+            int? wordPage = null;
             int indiceHash = FuncaoHash(word);
 
             try
             {
                 wordPage = buckets[indiceHash].GetWordPage(word);
             }
-            catch (Exception)
+            catch (IndexOutOfRangeException)
             {
                 Bucket bucketAddressRef = buckets[indiceHash];
 
                 bucketAddressRef = bucketAddressRef.Next;
                 wordPage = bucketAddressRef.GetWordPage(word);
             }
+
+            if (wordPage == null)
+                throw new NullReferenceException();
 
             return wordPage;
         }
