@@ -16,6 +16,7 @@ namespace webapp.Models.HashTable
         private Cell<string, int>[] bucket;
         private int index;
         private Bucket next;
+        private int quantidadeVizinhos;
 
         public Bucket(int capacidadeMaxima)
         {
@@ -34,6 +35,7 @@ namespace webapp.Models.HashTable
             {
                 // Debug:
                 // Console.WriteLine("\n\n----> COLISÃO!!!!!\n\n");
+                quantidadeVizinhos++;
                 throw;
             }
         }
@@ -51,7 +53,7 @@ namespace webapp.Models.HashTable
                 }
             }
 
-            throw new IndexOutOfRangeException();
+            return null;
         }
 
         public bool Contains(string word)
@@ -87,6 +89,7 @@ namespace webapp.Models.HashTable
             get => next;
             set => next = value;
         }
+        public int QuantidadeVizinhos => quantidadeVizinhos;
 
         public int GetIndex() => index;
     }

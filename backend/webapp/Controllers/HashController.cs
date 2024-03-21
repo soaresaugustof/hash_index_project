@@ -139,7 +139,6 @@ public class HashController : ControllerBase
         try
         {
             foundWordPage = hashTable.SearchWordPage(word);
-            Console.WriteLine("\n\n\n\n" + foundWordPage + "\n\n\n\n");
 
             Page page = book.Pages[(int)foundWordPage];
 

@@ -37,14 +37,12 @@ namespace webapp.Models.HashTable
             int? wordPage = null;
             int indiceHash = FuncaoHash(word);
 
-            try
-            {
-                wordPage = buckets[indiceHash].GetWordPage(word);
-            }
-            catch (IndexOutOfRangeException)
-            {
-                Bucket bucketAddressRef = buckets[indiceHash];
+            Bucket bucketAddressRef = buckets[indiceHash];
 
+            wordPage = buckets[indiceHash].GetWordPage(word);
+
+            while (wordPage == null)
+            {
                 bucketAddressRef = bucketAddressRef.Next;
                 wordPage = bucketAddressRef.GetWordPage(word);
             }
