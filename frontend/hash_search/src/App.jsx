@@ -1,3 +1,4 @@
+/* eslint-disable default-case */
 import './App.css';
 import React, { useEffect, useState } from 'react';
 import Dashboard from './components/Dasboard';
@@ -33,40 +34,50 @@ function App() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.post('url-do-backend', {}, {
+      const response1 = await axios.post('http://localhost:5051/api/hash/fill', {}, {
         headers: {
           'Content-Type': 'application/json'
         }
       });
-      console.log(response.data);
+      console.log('Response from /api/hash/fill:', response1.data);
+  
+      const response2 = await axios.post('http://localhost:5051/api/hash/book', {}, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      console.log('Response from /api/hash/book:', response2.data);
     } catch (error) {
       console.error('Erro ao fazer requisição: ', error);
     }
   };
-
+  
   const onSubmit = async () => {
-    let requestData = {}; 
-  
-    switch (formState) {
-      case 1:
-        requestData = { chave }; 
-        break;
-      case 2:
-        requestData = { quantidade }; 
-        break;
-      case 3:
-        requestData = { tuplas }; 
-        break;
-      default:
-        return;
-    } 
-  
     try {
-      const response = await axios.post('xxxxx', requestData, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
+      let requestData = {}; 
+      let response;
+
+      switch (formState) {
+        case 1:
+          requestData = { chave }; 
+          response = await axios.get('http://localhost:5051/api/hash/', requestData, {
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
+          break;
+        case 2:
+          requestData = { tuplas };
+          response = await axios.get('http://localhost:5051/api/hash/', requestData, {
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }); 
+          break;
+        default:
+          return;
+      } 
+  
       console.log(response.data);
       setResultadoDaRequest(response.data)
     } catch (error) {
@@ -75,7 +86,6 @@ function App() {
   };
 
   const switchButtonClick = () => {
-    //AQUI
     switch (formState) {
       case 1:
         return (
@@ -91,35 +101,24 @@ function App() {
         return (
           <>
             <div>
-              <p>Número de registros por página:</p>
-              <input type="number" value={quantidade} onChange={(e) => setQuantidade(e.target.value)} />
-            </div>
-            <button type="button" onClick={() => { setFormState(0) }}>Voltar</button>
-          </>
-        );
-      case 3:
-        return (
-          <>
-            <div>
               <p>Número de tuplas para scan:</p>
               <input type="number" value={tuplas} onChange={(e) => setTuplas(e.target.value)} />
             </div>
             <button type="button" onClick={() => { setFormState(0) }}>Voltar</button>
           </>
         );
-      case 0:
+      default:
         return (
           <>
             <button onClick={() => { setFormState(1) }}>Chave de busca</button>
-            <button onClick={() => { setFormState(2) }}>Número de registros por página</button>
-            <button onClick={() => { setFormState(3) }}>Número de tuplas para scan</button>
+            <button onClick={() => { setFormState(2) }}>Número de tuplas para scan</button>
           </>
         );
     }
   }
 
   useEffect(() => {
-    fetchData();
+    fetchData();  
   }, []);
 
   return (
