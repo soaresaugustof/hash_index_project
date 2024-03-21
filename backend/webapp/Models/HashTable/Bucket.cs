@@ -22,16 +22,8 @@ namespace webapp.Models.HashTable
 
         public void AddRegistro(string valorHashKey, int pagina)
         {
-            try
-            {
-                bucket[index] = new Cell<string, int>(valorHashKey, pagina);
-                index++;
-            }
-            catch (System.NullReferenceException)
-            {
-                Console.WriteLine("\n-------> erro - BUCKET OVERFLOW\n");
-                throw;
-            }
+            bucket[index] = new Cell<string, int>(valorHashKey, pagina);
+            index++;
         }
 
         public Cell<string, int> GetRegistro(int index)

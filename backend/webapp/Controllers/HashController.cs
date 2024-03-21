@@ -15,6 +15,8 @@ public class HashController : ControllerBase
     private static Book? book;
     private static HashTable? hashTable;
 
+    int parameter = 10;
+
     // public HashController()
     // : base(client) { }
 
@@ -29,7 +31,7 @@ public class HashController : ControllerBase
         string[] lines;
         var list = new List<string>();
         var fileStream = new FileStream(
-            $"{projectPath}\\words.txt",
+            $"{projectPath}\\words_test.txt",
             FileMode.Open,
             FileAccess.Read
         );
@@ -48,14 +50,14 @@ public class HashController : ControllerBase
 
         // 2. Cria a entidade Book baseada no valor do tamanho do Array
         // TODO: Criar um atributo de Query String que torne esse "100" alterável
-        book = new Book(lines.Length, 100);
+        book = new Book(lines.Length, parameter);
 
         // DEBUG:
         // Console.WriteLine(book.QuantidadePaginas);
 
         for (int i = 0; i < lines.Length; i += book.Pages[0].QuantidadeRegistros)
         {
-            Page page = new(lines.Skip(i).Take(100).ToArray());
+            Page page = new(lines.Skip(i).Take(parameter).ToArray());
             book.AddPage(page);
         }
 
@@ -72,7 +74,7 @@ public class HashController : ControllerBase
     [HttpPost("table")]
     public ActionResult<HashTable> InitHashTable(string[] lines)
     {
-        hashTable = new HashTable(lines.Length, 100);
+        hashTable = new HashTable(lines.Length, parameter);
 
         return hashTable;
     }

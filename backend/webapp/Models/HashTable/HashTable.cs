@@ -28,7 +28,7 @@ namespace webapp.Models.HashTable
         public void InsertBucket(string key, int page)
         {
             int indiceHash = FuncaoHash(key);
-            Console.WriteLine("indiceHash: " + indiceHash);
+            // Console.WriteLine("indiceHash: " + indiceHash);
             buckets[indiceHash] = new Bucket(registrosPorBucket);
             buckets[indiceHash].AddRegistro(key, page);
         }
@@ -38,8 +38,8 @@ namespace webapp.Models.HashTable
         {
             int keyNumber = ToNumber(key);
             int hashValue = (keyNumber + 1) % buckets.Length;
-            Console.WriteLine("Buckets Length: " + buckets.Length);
-            Console.WriteLine("FuncaoHash // hash value: " + hashValue);
+            // Console.WriteLine("Buckets Length: " + buckets.Length);
+            // Console.WriteLine("FuncaoHash // hash value: " + hashValue);
 
             return hashValue;
         }
@@ -54,12 +54,12 @@ namespace webapp.Models.HashTable
             // somatório com números primos
             foreach (var c in chars)
             {
-                Console.Write(c + " ");
+                // Console.Write(c + " ");
                 sum += c * primeNum;
             }
             // DEBUG:
             // Console.WriteLine();
-            Console.WriteLine("\nToNumber // soma: " + sum);
+            // Console.WriteLine("\nToNumber // soma: " + sum);
 
             return sum;
         }
