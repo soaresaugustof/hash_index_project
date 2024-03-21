@@ -9,6 +9,7 @@ namespace backend.Models
     {
         private int globalIndex;
         private Page[] pages;
+        private int quantidadePaginas;
 
         public Book(double quantidadeRegistros, double registrosPorPagina)
         {
@@ -19,7 +20,7 @@ namespace backend.Models
             globalIndex = 0;
 
             // Obs: 'quantidadeRegistros' é equivalente ao tamanho do Array com os registros
-            int quantidadePaginas = (int)Math.Ceiling(quantidadeRegistros / registrosPorPagina);
+            this.quantidadePaginas = (int)Math.Ceiling(quantidadeRegistros / registrosPorPagina);
             Pages = new Page[quantidadePaginas];
         }
 
@@ -53,7 +54,10 @@ namespace backend.Models
             set => pages = value;
         }
 
-        public int QuantidadePaginas => pages.Length;
+        public int QuantidadePaginas
+        {
+            get => pages.Length;
+        }
 
         public int QuantidadeRegistrosPagina => pages[0].QuantidadeRegistros;
     }

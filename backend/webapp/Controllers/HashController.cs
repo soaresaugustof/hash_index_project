@@ -127,7 +127,7 @@ public class HashController : ControllerBase
     public ActionResult<Bucket> GetBucketById(int id) => hashTable.Buckets[id];
 
     [HttpGet("{word}")]
-    public ActionResult<object> GetWordByHashindex(string word)
+    public ActionResult<string> GetWordByHashindex(string word)
     {
         watch = new Stopwatch();
         string formatTimeSpan = null;
@@ -178,7 +178,7 @@ public class HashController : ControllerBase
                 {
                     status = 200,
                     description = "Palavra Encontrada",
-                    searchWord = foundWord.ToUpper(),
+                    searchWord = foundWord,
                     wordPage = foundWordPage,
                     message = $"A palavra \"{foundWord.ToUpper()}\" foi encontrada no Bucket Atual",
                     runtime = formatTimeSpan
@@ -188,7 +188,7 @@ public class HashController : ControllerBase
     }
 
     [HttpGet("common/{word}")]
-    public ActionResult GetWordCommon(string word)
+    public ActionResult<string> GetWordCommon(string word)
     {
         watch = new Stopwatch();
         string formatTimeSpan = null;
@@ -218,12 +218,20 @@ public class HashController : ControllerBase
                 {
                     status = 200,
                     description = "Palavra Encontrada",
-                    searchWord = foundWord.ToUpper(),
+                    searchWord = foundWord,
                     message = $"A palavra \"{foundWord.ToUpper()}\" foi encontrada no Bucket Atual",
                     runtime = formatTimeSpan
                 }
             )
             : NoContent();
+    }
+
+    [HttpGet("first/{page:int}/{quantity:int}")]
+    public ActionResult<string[]> GetFirstTuples(int page, int quantity)
+    {
+        string[] xFirstTuples = new string[quantity];
+
+        return null;
     }
 
     // *** UTILs Methods ***
