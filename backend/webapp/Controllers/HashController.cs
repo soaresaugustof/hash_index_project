@@ -187,8 +187,41 @@ public class HashController : ControllerBase
             : NoContent();
     }
 
+    [HttpGet("first/{page:int}/{quantity:int}")]
+    public ActionResult<string[]> GetFirstTuples(int page, int quantity)
+    {
+        watch = new Stopwatch();
+        string formatTimeSpan = null;
+
+        string[] xFirstTuples = new string[quantity];
+        var pagesWordList = book.Pages[page].WordsList;
+
+        for (int i = 0; i < xFirstTuples.Length; i++)
+        {
+            // xFirstTuples[i] = GetWordCommon(wordList[i]).Value;
+            xFirstTuples[i] = GetWordCommon(pagesWordList[i]);
+        }
+
+        watch.Stop();
+        formatTimeSpan = FormatedTimeSpan();
+
+        return xFirstTuples != null
+            ? Ok(
+                new
+                {
+                    status = 200,
+                    description = $"Table Scan das {quantity} primeiras linhas da página {page}",
+                    page = page,
+                    searchTuplesQuantity = quantity,
+                    xFirstTuples = xFirstTuples,
+                    runtime = formatTimeSpan
+                }
+            )
+            : NoContent();
+    }
+
     [HttpGet("common/{word}")]
-    public ActionResult<string> GetWordCommon(string word)
+    public string GetWordCommon(string word)
     {
         watch = new Stopwatch();
         string formatTimeSpan = null;
@@ -212,26 +245,7 @@ public class HashController : ControllerBase
         watch.Stop();
         formatTimeSpan = FormatedTimeSpan();
 
-        return foundWord != null
-            ? Ok(
-                new
-                {
-                    status = 200,
-                    description = "Palavra Encontrada",
-                    searchWord = foundWord,
-                    message = $"A palavra \"{foundWord.ToUpper()}\" foi encontrada no Bucket Atual",
-                    runtime = formatTimeSpan
-                }
-            )
-            : NoContent();
-    }
-
-    [HttpGet("first/{page:int}/{quantity:int}")]
-    public ActionResult<string[]> GetFirstTuples(int page, int quantity)
-    {
-        string[] xFirstTuples = new string[quantity];
-
-        return null;
+        return foundWord;
     }
 
     // *** UTILs Methods ***
@@ -239,7 +253,7 @@ public class HashController : ControllerBase
     {
         TimeSpan ts = watch.Elapsed;
         return String.Format(
-            "{0:00}:{1:00}:{2:00}.{3:00}{4:00}{5:00}ms",
+            "{0:00}:{1:00}:{2:00}.{3:00}{4:00}ms",
             ts.Hours,
             ts.Minutes,
             ts.Seconds,
