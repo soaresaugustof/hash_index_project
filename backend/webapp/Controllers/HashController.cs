@@ -160,7 +160,7 @@ public class HashController : ControllerBase
         }
 
         Page page = book.Pages[(int)foundWordPage];
-        string foundWord = "";
+        string? foundWord = null;
 
         foreach (var item in page.WordsList)
         {
