@@ -8,6 +8,10 @@ namespace webapp.Models.HashTable
 {
     public class HashTable
     {
+        private int numeroOverflows;
+        private int numeroColisoes;
+        private int numeroElementosAdicionados;
+
         // Conjunto de Buckets da Hash Table
         private Bucket[] buckets;
 
@@ -16,6 +20,8 @@ namespace webapp.Models.HashTable
 
         public HashTable(double quantidadeTotalRegistros, int quantidadeRegistrosPorBuckets)
         {
+            numeroColisoes = 0;
+
             int quantidadeBuckets = (int)
                 Math.Round(quantidadeTotalRegistros / quantidadeRegistrosPorBuckets);
 
@@ -29,8 +35,45 @@ namespace webapp.Models.HashTable
         {
             int indiceHash = FuncaoHash(key);
             // Console.WriteLine("indiceHash: " + indiceHash);
-            buckets[indiceHash] = new Bucket(registrosPorBucket);
-            buckets[indiceHash].AddRegistro(key, page);
+            if (buckets[indiceHash] == null)
+            {
+                buckets[indiceHash] = new Bucket(registrosPorBucket);
+            }
+
+            try
+            {
+                buckets[indiceHash].AddRegistro(key, page);
+            }
+            catch (IndexOutOfRangeException) // ALGORITMO DE RESOLUÇÃO DE OVERFLOW E COLISÕES #2
+            {
+                numeroColisoes++;
+
+                Bucket bucketAddressRef = buckets[indiceHash];
+
+                while (bucketAddressRef.Next != null)
+                {
+                    bucketAddressRef = bucketAddressRef.Next;
+                }
+
+                // Lógica: Se o bucket não foi completamente preenchido, será adicionado
+                // um novo registro. Caso contrário, será criado um novo registro e adicionado
+                // o dado que colidiu, nesse novo registro.
+                if (bucketAddressRef.GetIndex() < bucketAddressRef.CapacidadePorBucket)
+                {
+                    bucketAddressRef.AddRegistro(key, page);
+                }
+                else
+                {
+                    numeroOverflows++;
+
+                    bucketAddressRef.Next = new Bucket(registrosPorBucket);
+                    bucketAddressRef = bucketAddressRef.Next;
+
+                    bucketAddressRef.AddRegistro(key, page);
+                }
+            }
+
+            numeroElementosAdicionados++;
         }
 
         // Função Hash que será utilizada para determinar qual bucket será selecionado
@@ -64,16 +107,10 @@ namespace webapp.Models.HashTable
             return sum;
         }
 
-        private string AddLeftZeroIfSmallNumber(char c) => c < 100 ? "0" + (short)c : "" + (short)c;
+        public int NumeroOverflows => numeroOverflows;
+        public int NumeroColisoes => numeroColisoes;
+        public int NumeroElementosAdicionados => numeroElementosAdicionados;
 
-        private string Stringify(string key)
-        {
-            return "";
-        }
-
-        public Bucket[] Buckets
-        {
-            get => buckets;
-        }
+        public Bucket[] Buckets => buckets;
     }
 }

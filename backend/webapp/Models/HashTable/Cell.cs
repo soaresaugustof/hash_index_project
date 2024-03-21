@@ -16,10 +16,10 @@ namespace webapp.Models.HashTable
             this.Pagina = pagina;
         }
 
-        public Cell<TKey, TValue> AddCell(TKey hashValue, TValue pagina)
-        {
-            return new Cell<TKey, TValue>(hashValue, pagina);
-        }
+        // public Cell<TKey, TValue> AddCell(TKey hashValue, TValue pagina)
+        // {
+        //     return new Cell<TKey, TValue>(hashValue, pagina);
+        // }
 
         // key
         public TKey HashValue

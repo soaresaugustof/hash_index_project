@@ -15,7 +15,7 @@ public class HashController : ControllerBase
     private static Book? book;
     private static HashTable? hashTable;
 
-    int parameter = 10;
+    int parameter = 100;
 
     // public HashController()
     // : base(client) { }
@@ -31,7 +31,7 @@ public class HashController : ControllerBase
         string[] lines;
         var list = new List<string>();
         var fileStream = new FileStream(
-            $"{projectPath}\\words_test.txt",
+            $"{projectPath}\\words.txt",
             FileMode.Open,
             FileAccess.Read
         );
@@ -57,7 +57,7 @@ public class HashController : ControllerBase
 
         for (int i = 0; i < lines.Length; i += book.Pages[0].QuantidadeRegistros)
         {
-            Page page = new(lines.Skip(i).Take(parameter).ToArray());
+            Page page = new Page(lines.Skip(i).Take(parameter).ToArray());
             book.AddPage(page);
         }
 
@@ -82,22 +82,8 @@ public class HashController : ControllerBase
     [HttpPost("fill")]
     public ActionResult<HashTable> FillHashTable()
     {
-        // int ii = 0;
-        // int jj = 92;
-
-        // // TODO: Transformar em loop
-        // var wordd = book.Pages[ii].WordsList[jj];
-
-        // hashTable.InsertBucket(wordd, ii);
-
-        // Console.WriteLine("Buckets[57]: " + hashTable.Buckets[57]);
-        // Console.WriteLine("Buckets[58]: " + hashTable.Buckets[58]);
-        // Console.WriteLine(
-        //     "Buckets[59]: indice: "
-        //         + hashTable.Buckets[59].GetRegistro(0).HashValue
-        //         + " // pagina: "
-        //         + hashTable.Buckets[59].GetRegistro(0).Pagina
-        // );
+        if (!IsHashTableEmpty())
+            return hashTable;
 
         for (int i = 0; i < book.Pages.Length; i++)
         {
@@ -119,8 +105,22 @@ public class HashController : ControllerBase
     }
 
     [HttpGet("table")]
-    public ActionResult<HashTable> GetHashTable()
+    public ActionResult<HashTable> GetHashTable() => hashTable;
+
+    [HttpGet("table/{id:int}")]
+    public ActionResult<Bucket> GetHashTableById(int id) => hashTable.Buckets[id];
+
+    // UTILs Methods
+    private bool IsHashTableEmpty()
     {
-        return hashTable;
+        int counter = 0;
+
+        for (int i = 0; i < hashTable.Buckets.Length; i++)
+        {
+            if (hashTable.Buckets[i] != null)
+                counter++;
+        }
+
+        return counter == 0;
     }
 }

@@ -16,19 +16,43 @@ namespace webapp.Models.HashTable
 
         public Bucket(int capacidadeMaxima)
         {
-            this.bucket = new Cell<string, int>[capacidadeMaxima];
-            this.index = 0;
+            BucketList = new Cell<string, int>[capacidadeMaxima];
+            index = 0;
         }
 
         public void AddRegistro(string valorHashKey, int pagina)
         {
-            bucket[index] = new Cell<string, int>(valorHashKey, pagina);
-            index++;
+            try
+            {
+                BucketList[index] = new Cell<string, int>(valorHashKey, pagina);
+                index++;
+            }
+            catch (IndexOutOfRangeException) // ALGORITMO DE RESOLUÇÃO DE OVERFLOW E COLISÕES #1
+            {
+                // Debug:
+                // Console.WriteLine("\n\n----> COLISÃO!!!!!\n\n");
+                throw;
+            }
         }
 
         public Cell<string, int> GetRegistro(int index)
         {
-            return bucket[index];
+            return BucketList[index];
         }
+
+        public int CapacidadePorBucket => BucketList.Length;
+
+        public Cell<string, int>[] BucketList
+        {
+            get => bucket;
+            set => bucket = value;
+        }
+        public Bucket Next
+        {
+            get => next;
+            set => next = value;
+        }
+
+        public int GetIndex() => index;
     }
 }

@@ -19,7 +19,7 @@ namespace backend.Models
             globalIndex = 0;
 
             // Obs: 'quantidadeRegistros' é equivalente ao tamanho do Array com os registros
-            int quantidadePaginas = (int)Math.Round(quantidadeRegistros / registrosPorPagina);
+            int quantidadePaginas = (int)Math.Ceiling(quantidadeRegistros / registrosPorPagina);
             Pages = new Page[quantidadePaginas];
         }
 
@@ -40,8 +40,11 @@ namespace backend.Models
 
         public void AddPage(Page page)
         {
-            pages[globalIndex] = page;
-            globalIndex++;
+            if (globalIndex < pages.Length)
+            {
+                pages[globalIndex] = page;
+                globalIndex++;
+            }
         }
 
         public Page[] Pages
