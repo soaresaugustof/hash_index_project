@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Dashboard from "./components/Dasboard";
 import useSWR from "swr";
 import axios from "axios";
+import { IconSearch, IconArrowBack, IconKey, IconGridScan, IconAbc, IconBook, IconClockHour4, IconFileCheck, IconMoodSad } from '@tabler/icons-react';
 
 // const fetcher = (url, quantidade) => fetch(`${url}?quantidade=${quantidade}`).then((res) => res.json());
 
@@ -34,30 +35,15 @@ function App() {
 
   const fetchData = async () => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
       const response1 = await axios.post(
-        "http://localhost:5051/api/hash/book",
-        {},
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+        "http://localhost:5051/api/hash/book"
       );
 
       const response2 = await axios.post(
-        "http://localhost:5051/api/hash/fill",
-        {},
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+        "http://localhost:5051/api/hash/fill"
       );
 
       console.log("Response from /api/hash/book:", response1.data);
-
       console.log("Response from /api/hash/fill:", response2.data);
       setDadosDoFill(response2.data);
     } catch (error) {
@@ -75,24 +61,13 @@ function App() {
       switch (formState) {
         case 1:
           response = await axios.get(
-            `http://localhost:5051/api/hash/${chave}`,
-            {
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
+            `http://localhost:5051/api/hash/${chave}`
           );
           break;
         case 2:
           requestData = { tuplas };
           response = await axios.get(
-            "http://localhost:5051/api/hash/",
-            requestData,
-            {
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
+            "http://localhost:5051/api/hash/"
           );
           break;
         default:
@@ -126,7 +101,7 @@ function App() {
                 setFormState(0);
               }}
             >
-              Voltar
+              <IconArrowBack />
             </button>
           </>
         );
@@ -147,7 +122,7 @@ function App() {
                 setFormState(0);
               }}
             >
-              Voltar
+              <IconArrowBack />
             </button>
           </>
         );
@@ -159,6 +134,7 @@ function App() {
                 setFormState(1);
               }}
             >
+              <IconKey />
               Chave de busca
             </button>
             <button
@@ -166,6 +142,7 @@ function App() {
                 setFormState(2);
               }}
             >
+              <IconGridScan />
               Número de tuplas para scan
             </button>
           </>
@@ -197,19 +174,24 @@ function App() {
             <div className="searchArrange">{switchButtonClick()}</div>
             {formState !== 0 && (
               <div className="searchArrange">
-                <button type="submit">Pesquisar</button>
+                <div class="button-container">
+                  <button type="submit">
+                    <IconSearch />
+                    Pesquisar
+                  </button>
+                </div>
               </div>
             )}
           </section>
           <section className="infos">
             <>
               <p>Taxa de colisão:</p>
-              <p>{dadosDoFill && dadosDoFill.numeroColisoes}</p>
+              <p>{dadosDoFill?.numeroColisoes}</p>
             </>
             <>
               <p>Taxa de overflow:</p>
               <p>
-                {dadosDoFill && dadosDoFill.numeroOverflows}
+                {dadosDoFill?.numeroOverflows}
               </p>
             </>
             <>
@@ -217,28 +199,41 @@ function App() {
               {/* <p>{dadosDoFill.</p> */}
             </>
           </section>
-          <div className="resultLabel">
-            <h2>Tela de resultados</h2>
-          </div>
-          <section className="dashboard">
-            {resultadoChaveDeBusca ? (
-              <>
-                {resultadoChaveDeBusca == "error" ? (
-                  <p>Registro não encontrado.</p>
-                ) : (
-                  <>
-                    <p>{resultadoChaveDeBusca.description}</p>
-                    <p>Palavra: {resultadoChaveDeBusca.searchWord}</p>
-                    <p>Página: {resultadoChaveDeBusca.wordPage}</p>
-                    <p>{resultadoChaveDeBusca.message}</p>
-                    {/* <Dashboard resultados={resultados} /> */}
-                  </>
-                )}
-              </>
-            ) : (
-              <p>Loading...</p>
+
+          <div className={`dashboard ${resultadoChaveDeBusca ? 'show' : ''}`}>
+            {resultadoChaveDeBusca && (
+              <div>
+                <h2 style={{ margin: "-1rem 0rem 2rem 0rem" }}>Resultados</h2>
+                <section>
+                  {resultadoChaveDeBusca !== "error" ? (
+                    <div style={{ gap: "1rem", display: "flex", flexDirection: "column" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
+                        <IconFileCheck color="#D79B64" />
+                        <p>{resultadoChaveDeBusca.message}</p>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
+                        <IconAbc color="#D79B64" />
+                        <p>Palavra: {resultadoChaveDeBusca.searchWord}</p>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
+                        <IconBook color="#D79B64" />
+                        <p>Página: {resultadoChaveDeBusca.wordPage}</p>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
+                        <IconClockHour4 color="#D79B64" />
+                        <p>Tempo: {resultadoChaveDeBusca.runtime}</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
+                      <IconMoodSad color="#D79B64"/>
+                      <p s>Registro não encontrado.</p>
+                    </div>
+                  )}
+                </section>
+              </div>
             )}
-          </section>
+          </div>
         </main>
       </form>
     </div>
