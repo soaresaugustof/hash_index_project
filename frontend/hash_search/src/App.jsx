@@ -9,8 +9,8 @@ import { IconSearch, IconArrowBack, IconKey, IconGridScan, IconAbc, IconBook, Ic
 // const fetcher = (url, quantidade) => fetch(`${url}?quantidade=${quantidade}`).then((res) => res.json());
 
 function App() {
-  const [quantidade, setQuantidade] = useState(10);
   const [pagina, setPagina] = useState(1);
+  const [chamadas, setChamadas] = useState(0);
   const [tuplas, setTuplas] = useState(10);
   const [chave, setChave] = useState("");
   const [formState, setFormState] = useState(0);
@@ -34,6 +34,10 @@ function App() {
      */
   };
 
+  const incrementarChamadas = () => {
+    setChamadas(chamadas + 1)
+  }
+
   const fetchData = async () => {
     try {
       const response1 = await axios.post(
@@ -47,6 +51,9 @@ function App() {
       console.log("Response from /api/hash/book:", response1.data);
       console.log("Response from /api/hash/fill:", response2.data);
       setDadosDoFill(response2.data);
+      incrementarChamadas()
+      incrementarChamadas()
+      console.log(chamadas)
     } catch (error) {
       console.error("Erro ao fazer requisição: ", error);
     }
@@ -64,12 +71,14 @@ function App() {
           response = await axios.get(
             `http://localhost:5051/api/hash/${chave}`
           );
+          incrementarChamadas()
           break;
         case 2:
           requestData = { tuplas };
           response = await axios.get(
             `http://localhost:5051/api/hash/first/${pagina}/${tuplas}`
           );
+          incrementarChamadas()
           break;
         default:
           return;
@@ -204,8 +213,8 @@ function App() {
               </p>
             </>
             <>
-              {/* <p>Estimativa de custo:</p> */}
-              {/* <p>{dadosDoFill.</p> */}
+              <p>Estimativa de custo:</p>
+              <p>{chamadas}</p>
             </>
           </section>
           <div className={`dashboard ${resultado ? 'show' : ''}`}>
