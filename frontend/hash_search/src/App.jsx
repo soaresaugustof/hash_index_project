@@ -1,19 +1,20 @@
 /* eslint-disable default-case */
-import './App.css';
-import React, { useEffect, useState } from 'react';
-import Dashboard from './components/Dasboard';
-import useSWR from 'swr';
-import axios from 'axios';
+import "./App.css";
+import React, { useEffect, useState } from "react";
+import Dashboard from "./components/Dasboard";
+import useSWR from "swr";
+import axios from "axios";
+import { IconSearch, IconArrowBack, IconKey, IconGridScan, IconAbc, IconBook, IconClockHour4, IconFileCheck, IconMoodSad } from '@tabler/icons-react';
 
-const fetcher = (url, quantidade) => fetch(`${url}?quantidade=${quantidade}`).then((res) => res.json());
+// const fetcher = (url, quantidade) => fetch(`${url}?quantidade=${quantidade}`).then((res) => res.json());
 
 function App() {
   const [quantidade, setQuantidade] = useState(10);
   const [tuplas, setTuplas] = useState(10);
-  const [chave, setChave] = useState('');
+  const [chave, setChave] = useState("");
   const [formState, setFormState] = useState(0);
-  const [resultadoDaRequest, setResultadoDaRequest] = useState();
-  const { data: resultados, error } = useSWR(['URL_DA_SUA_API', quantidade, chave, tuplas], fetcher);
+  const [resultadoChaveDeBusca, setResultadoChaveDeBusca] = useState(null);
+  const [dadosDoFill, setDadosDoFill] = useState();
 
   //if (error) return <div>Erro ao buscar dados da API</div>;
   //if (!resultados) return <div>Carregando...</div>;
@@ -30,58 +31,54 @@ function App() {
       .catch((error) => console.error('Erro ao obter resultados:', error));
   };
      */
-  }
+  };
 
   const fetchData = async () => {
     try {
-      const response1 = await axios.post('http://localhost:5051/api/hash/fill', {}, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-      console.log('Response from /api/hash/fill:', response1.data);
-  
-      const response2 = await axios.post('http://localhost:5051/api/hash/book', {}, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-      console.log('Response from /api/hash/book:', response2.data);
+      const response1 = await axios.post(
+        "http://localhost:5051/api/hash/book"
+      );
+
+      const response2 = await axios.post(
+        "http://localhost:5051/api/hash/fill"
+      );
+
+      console.log("Response from /api/hash/book:", response1.data);
+      console.log("Response from /api/hash/fill:", response2.data);
+      setDadosDoFill(response2.data);
     } catch (error) {
-      console.error('Erro ao fazer requisição: ', error);
+      console.error("Erro ao fazer requisição: ", error);
     }
   };
-  
-  const onSubmit = async () => {
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
     try {
-      let requestData = {}; 
+      let requestData = {};
       let response;
 
       switch (formState) {
         case 1:
-          requestData = { chave }; 
-          response = await axios.get('http://localhost:5051/api/hash/', requestData, {
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          });
+          response = await axios.get(
+            `http://localhost:5051/api/hash/${chave}`
+          );
           break;
         case 2:
           requestData = { tuplas };
-          response = await axios.get('http://localhost:5051/api/hash/', requestData, {
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          }); 
+          response = await axios.get(
+            "http://localhost:5051/api/hash/"
+          );
           break;
         default:
           return;
-      } 
-  
+      }
+
       console.log(response.data);
-      setResultadoDaRequest(response.data)
+      setResultadoChaveDeBusca(response.data);
     } catch (error) {
-      console.error('Erro ao fazer requisição: ', error);
+      console.error("Erro ao fazer requisição: ", error);
+      setResultadoChaveDeBusca("error");
     }
   };
 
@@ -92,9 +89,20 @@ function App() {
           <>
             <div>
               <p>Chave de busca:</p>
-              <input type="text" value={chave} onChange={(e) => setChave(e.target.value)} />
+              <input
+                type="text"
+                value={chave}
+                onChange={(e) => setChave(e.target.value)}
+              />
             </div>
-            <button type="button" onClick={() => { setFormState(0) }}>Voltar</button>
+            <button
+              type="button"
+              onClick={() => {
+                setFormState(0);
+              }}
+            >
+              <IconArrowBack />
+            </button>
           </>
         );
       case 2:
@@ -102,28 +110,57 @@ function App() {
           <>
             <div>
               <p>Número de tuplas para scan:</p>
-              <input type="number" value={tuplas} onChange={(e) => setTuplas(e.target.value)} />
+              <input
+                type="number"
+                value={tuplas}
+                onChange={(e) => setTuplas(e.target.value)}
+              />
             </div>
-            <button type="button" onClick={() => { setFormState(0) }}>Voltar</button>
+            <button
+              type="button"
+              onClick={() => {
+                setFormState(0);
+              }}
+            >
+              <IconArrowBack />
+            </button>
           </>
         );
       default:
         return (
           <>
-            <button onClick={() => { setFormState(1) }}>Chave de busca</button>
-            <button onClick={() => { setFormState(2) }}>Número de tuplas para scan</button>
+            <button
+              onClick={() => {
+                setFormState(1);
+              }}
+            >
+              <IconKey />
+              Chave de busca
+            </button>
+            <button
+              onClick={() => {
+                setFormState(2);
+              }}
+            >
+              <IconGridScan />
+              Número de tuplas para scan
+            </button>
           </>
         );
     }
-  }
+  };
 
   useEffect(() => {
-    fetchData();  
+    fetchData();
   }, []);
 
   return (
     <div>
-      <form onSubmit={(e) => { onSubmit() }}>
+      <form
+        onSubmit={(e) => {
+          onSubmit(e);
+        }}
+      >
         <header>
           <nav>
             <h1>#ASH READER</h1>
@@ -134,26 +171,69 @@ function App() {
             <h2>Campos de busca</h2>
           </div>
           <section className="pesquisa">
-            <div className="searchArrange">
-              {switchButtonClick()}
-            </div>
-            {formState !== 0 &&
-              (<div className="searchArrange">
-                <button type="submit">Pesquisar</button>
-              </div>)
-            }
+            <div className="searchArrange">{switchButtonClick()}</div>
+            {formState !== 0 && (
+              <div className="searchArrange">
+                <div class="button-container">
+                  <button type="submit">
+                    <IconSearch />
+                    Pesquisar
+                  </button>
+                </div>
+              </div>
+            )}
           </section>
           <section className="infos">
-            <p>Taxa de colisão:</p>
-            <p>Taxa de overflow:</p>
-            <p>Estimativa de custo:</p>
+            <>
+              <p>Taxa de colisão:</p>
+              <p>{dadosDoFill?.numeroColisoes}</p>
+            </>
+            <>
+              <p>Taxa de overflow:</p>
+              <p>
+                {dadosDoFill?.numeroOverflows}
+              </p>
+            </>
+            <>
+              <p>Estimativa de custo:</p>
+              {/* <p>{dadosDoFill.</p> */}
+            </>
           </section>
-          <div className="resultLabel">
-            <h2>Tela de resultados</h2>
+
+          <div className={`dashboard ${resultadoChaveDeBusca ? 'show' : ''}`}>
+            {resultadoChaveDeBusca && (
+              <div>
+                <h2 style={{ margin: "-1rem 0rem 2rem 0rem" }}>Resultados</h2>
+                <section>
+                  {resultadoChaveDeBusca !== "error" ? (
+                    <div style={{ gap: "1rem", display: "flex", flexDirection: "column" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
+                        <IconFileCheck color="#D79B64" />
+                        <p>{resultadoChaveDeBusca.message}</p>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
+                        <IconAbc color="#D79B64" />
+                        <p>Palavra: {resultadoChaveDeBusca.searchWord}</p>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
+                        <IconBook color="#D79B64" />
+                        <p>Página: {resultadoChaveDeBusca.wordPage}</p>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
+                        <IconClockHour4 color="#D79B64" />
+                        <p>Tempo: {resultadoChaveDeBusca.runtime}</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
+                      <IconMoodSad color="#D79B64"/>
+                      <p s>Registro não encontrado.</p>
+                    </div>
+                  )}
+                </section>
+              </div>
+            )}
           </div>
-          <section className="dashboard">
-            <Dashboard resultados={resultados} />
-          </section>
         </main>
       </form>
     </div>
