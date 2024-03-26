@@ -10,10 +10,11 @@ import { IconSearch, IconArrowBack, IconKey, IconGridScan, IconAbc, IconBook, Ic
 
 function App() {
   const [quantidade, setQuantidade] = useState(10);
+  const [pagina, setPagina] = useState(1);
   const [tuplas, setTuplas] = useState(10);
   const [chave, setChave] = useState("");
   const [formState, setFormState] = useState(0);
-  const [resultadoChaveDeBusca, setResultadoChaveDeBusca] = useState(null);
+  const [resultado, setResultado] = useState(null);
   const [dadosDoFill, setDadosDoFill] = useState();
 
   //if (error) return <div>Erro ao buscar dados da API</div>;
@@ -67,7 +68,7 @@ function App() {
         case 2:
           requestData = { tuplas };
           response = await axios.get(
-            "http://localhost:5051/api/hash/"
+            `http://localhost:5051/api/hash/first/${pagina}/${tuplas}`
           );
           break;
         default:
@@ -75,10 +76,10 @@ function App() {
       }
 
       console.log(response.data);
-      setResultadoChaveDeBusca(response.data);
+      setResultado(response.data);
     } catch (error) {
       console.error("Erro ao fazer requisição: ", error);
-      setResultadoChaveDeBusca("error");
+      setResultado("error");
     }
   };
 
@@ -114,6 +115,14 @@ function App() {
                 type="number"
                 value={tuplas}
                 onChange={(e) => setTuplas(e.target.value)}
+              />
+            </div>
+            <div>
+              <p>Página:</p>
+              <input
+                type="number"
+                value={pagina}
+                onChange={(e) => setPagina(e.target.value)}
               />
             </div>
             <button
@@ -195,44 +204,98 @@ function App() {
               </p>
             </>
             <>
-              <p>Estimativa de custo:</p>
+              {/* <p>Estimativa de custo:</p> */}
               {/* <p>{dadosDoFill.</p> */}
             </>
           </section>
-
-          <div className={`dashboard ${resultadoChaveDeBusca ? 'show' : ''}`}>
-            {resultadoChaveDeBusca && (
+          <div className={`dashboard ${resultado ? 'show' : ''}`}>
+            {resultado?.hasOwnProperty("page") ? (
               <div>
                 <h2 style={{ margin: "-1rem 0rem 2rem 0rem" }}>Resultados</h2>
                 <section>
-                  {resultadoChaveDeBusca !== "error" ? (
+                  {resultado !== "error" ? (
                     <div style={{ gap: "1rem", display: "flex", flexDirection: "column" }}>
                       <div style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
                         <IconFileCheck color="#D79B64" />
-                        <p>{resultadoChaveDeBusca.message}</p>
+                        <p>{resultado?.description}</p>
                       </div>
-                      <div style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
-                        <IconAbc color="#D79B64" />
-                        <p>Palavra: {resultadoChaveDeBusca.searchWord}</p>
-                      </div>
+                      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                        <thead>
+                          <tr>
+                            <th colSpan="5" style={{ border: "1px solid #000", padding: "8px", textAlign: "left" }}>Palavras</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {resultado?.xFirstTuples.map((word, index) => (
+                            index % 5 === 0 ? (
+                              <tr key={index}>
+                                <td style={{ border: "1px solid #000", padding: "8px" }}>{word}</td>
+                                {resultado?.xFirstTuples[index + 1] && (
+                                  <td style={{ border: "1px solid #000", padding: "8px" }}>{resultado?.xFirstTuples[index + 1]}</td>
+                                )}
+                                {resultado?.xFirstTuples[index + 2] && (
+                                  <td style={{ border: "1px solid #000", padding: "8px" }}>{resultado?.xFirstTuples[index + 2]}</td>
+                                )}
+                                {resultado?.xFirstTuples[index + 3] && (
+                                  <td style={{ border: "1px solid #000", padding: "8px" }}>{resultado?.xFirstTuples[index + 3]}</td>
+                                )}
+                                {resultado?.xFirstTuples[index + 4] && (
+                                  <td style={{ border: "1px solid #000", padding: "8px" }}>{resultado?.xFirstTuples[index + 4]}</td>
+                                )}
+                              </tr>
+                            ) : null
+                          ))}
+                        </tbody>
+                      </table>
                       <div style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
                         <IconBook color="#D79B64" />
-                        <p>Página: {resultadoChaveDeBusca.wordPage}</p>
+                        <p>Página: {resultado?.page}</p>
                       </div>
                       <div style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
                         <IconClockHour4 color="#D79B64" />
-                        <p>Tempo: {resultadoChaveDeBusca.runtime}</p>
+                        <p>Tempo: {resultado?.runtime}</p>
                       </div>
                     </div>
                   ) : (
                     <div style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
-                      <IconMoodSad color="#D79B64"/>
+                      <IconMoodSad color="#D79B64" />
                       <p s>Registro não encontrado.</p>
                     </div>
                   )}
                 </section>
               </div>
-            )}
+            ) :
+              <div>
+                <h2 style={{ margin: "-1rem 0rem 2rem 0rem" }}>Resultados</h2>
+                <section>
+                  {resultado !== "error" ? (
+                    <div style={{ gap: "1rem", display: "flex", flexDirection: "column" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
+                        <IconFileCheck color="#D79B64" />
+                        <p>{resultado?.message}</p>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
+                        <IconAbc color="#D79B64" />
+                        <p>Palavra: {resultado?.searchWord}</p>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
+                        <IconBook color="#D79B64" />
+                        <p>Página: {resultado?.wordPage}</p>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
+                        <IconClockHour4 color="#D79B64" />
+                        <p>Tempo: {resultado?.runtime}</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
+                      <IconMoodSad color="#D79B64" />
+                      <p s>Registro não encontrado.</p>
+                    </div>
+                  )}
+                </section>
+              </div>
+            }
           </div>
         </main>
       </form>
