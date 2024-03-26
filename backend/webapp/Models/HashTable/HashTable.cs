@@ -32,7 +32,7 @@ namespace webapp.Models.HashTable
         // Toda vez que adicionarmos um novo dado à HashTable, com a função hash,
         // criamos um novo Bucket com um determinado tamanho (registros por bucket)
 
-        public int? SearchWordPage(string word)
+        public int? SearchWordPage(string word, ref int costCount)
         {
             int? wordPage = null;
             int indiceHash = FuncaoHash(word);
@@ -45,6 +45,8 @@ namespace webapp.Models.HashTable
             {
                 bucketAddressRef = bucketAddressRef.Next;
                 wordPage = bucketAddressRef.GetWordPage(word);
+
+                costCount++;
             }
 
             if (wordPage == null)

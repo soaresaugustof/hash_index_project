@@ -135,10 +135,11 @@ public class HashController : ControllerBase
 
         int? foundWordPage = null;
         string? foundWord = null;
+        int costCount = 1;
 
         try
         {
-            foundWordPage = hashTable.SearchWordPage(word);
+            foundWordPage = hashTable.SearchWordPage(word, ref costCount);
 
             Page page = book.Pages[(int)foundWordPage];
 
@@ -163,7 +164,8 @@ public class HashController : ControllerBase
                     description = "Erro - Palavra Não Econtrada",
                     searchWord = word,
                     message = $"Não foi possível encontrar a palavra \"{word}\" no Bucket atual. Verifique a entrada solicitada e Tente novamente.",
-                    runtime = formatTimeSpan
+                    runtime = formatTimeSpan,
+                    costEstimate = costCount
                 }
             );
         }
@@ -181,7 +183,8 @@ public class HashController : ControllerBase
                     searchWord = foundWord,
                     wordPage = foundWordPage,
                     message = $"A palavra \"{foundWord.ToUpper()}\" foi encontrada no Bucket Atual",
-                    runtime = formatTimeSpan
+                    runtime = formatTimeSpan,
+                    costEstimate = costCount
                 }
             )
             : NoContent();
@@ -229,6 +232,8 @@ public class HashController : ControllerBase
         watch.Start();
 
         string foundWord = null;
+        int costCount = 1;
+        int foundWordPage = 0;
 
         foreach (var page in book.Pages)
         {
@@ -240,6 +245,9 @@ public class HashController : ControllerBase
                     break;
                 }
             }
+
+            costCount++;
+            foundWordPage++;
         }
 
         watch.Stop();
