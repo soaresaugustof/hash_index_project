@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Dashboard from "./components/Dasboard";
 import useSWR from "swr";
 import axios from "axios";
-import { IconSearch, IconArrowBack, IconKey, IconGridScan, IconAbc, IconBook, IconClockHour4, IconFileCheck, IconMoodSad } from '@tabler/icons-react';
+import { IconSearch, IconArrowBack, IconKey, IconGridScan, IconAbc, IconBook, IconClockHour4, IconFileCheck, IconMoodSad, IconSettings, IconListSearch } from '@tabler/icons-react';
 
 function App() {
   const [chamadas, setChamadas] = useState(0);
@@ -13,7 +13,7 @@ function App() {
   const [formState, setFormState] = useState(0);
   const [resultado, setResultado] = useState(null);
   const [dadosDoFill, setDadosDoFill] = useState();
-  const [loadingFillData, setLoadingFillData] = useState(true);
+  const [loadingFillData, setLoadingFillData] = useState();
   const [qtdRegs, setQtdRegs] = useState(100);
 
   const incrementarChamadas = () => {
@@ -21,6 +21,7 @@ function App() {
   }
 
   const fetchData = () => {
+    setLoadingFillData(true); // Set loading to true before fetching data
     axios.post(`http://localhost:5051/api/hash/book/${qtdRegs}`)
       .then(response1 => {
         return axios.post("http://localhost:5051/api/hash/fill");
@@ -47,7 +48,6 @@ function App() {
           response = await axios.get(
             `http://localhost:5051/api/hash/${chave}`
           );
-          incrementarChamadas()
           break;
         case 2:
           requestData = { tuplas };
@@ -154,15 +154,19 @@ function App() {
           </div>
           <section className="pesquisa">
             <div className="searchArrange">
-              <input 
+              <input
                 type="number"
                 value={qtdRegs}
-                onChange = {(e) => setQtdRegs(e.target.value)}
+                onChange={(e) => setQtdRegs(e.target.value)}
               />
-              <button 
+              <button
+                disabled={loadingFillData}
+                style={{ background: loadingFillData ? 'lightgray' : '#D79B64' }}
                 type="submit"
                 onClick={() => fetchData()}
-              >Carregar hash</button>
+              >
+                Carregar hash
+              </button>
             </div>
             <div className="searchArrange">{switchButtonClick()}</div>
             {formState !== 0 && (
@@ -176,38 +180,44 @@ function App() {
               </div>
             )}
           </section>
-          <section className="infos">
-            <>
-              <p>Taxa de colisão:</p>
-              {loadingFillData ? ( // Display loading or data based on loading state
-                <div className="loader"/>
-              ) : (
-                <p>{dadosDoFill?.numeroColisoes}</p>
-              )}
-            </>
-            <>
-              <p>Taxa de overflow:</p>
-              {loadingFillData ? ( // Display loading or data based on loading state
-                <div className="loader"/>
-              ) : (
-                <p>{dadosDoFill?.numeroOverflows}</p>
-              )}
-            </>
-            <>
-              <p>Estimativa de custo:</p>
-              <p>{chamadas}</p>
-            </>
-          </section>
+
+          {
+            loadingFillData ? (
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", marginTop: 20 }}>
+                <div className="loader" />
+              </div>
+            ) : dadosDoFill ? (
+              <section className="infos" >
+                <>
+                  <p>Taxa de colisão:</p>
+                  <p>{dadosDoFill.numeroColisoes}</p>
+                </>
+                <>
+                  <p>Taxa de overflow:</p>
+                  <p>{dadosDoFill.numeroOverflows}</p>
+                </>
+              </section>
+            ) : null
+          }
+
           <div className={`dashboard ${resultado ? 'show' : ''}`}>
-            {resultado?.hasOwnProperty("page") ? (
+            {resultado?.hasOwnProperty("costEtimate") ? (
               <div>
                 <h2 style={{ margin: "-1rem 0rem 2rem 0rem" }}>Resultados</h2>
                 <section>
                   {resultado !== "error" ? (
                     <div style={{ gap: "1rem", display: "flex", flexDirection: "column" }}>
                       <div style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
-                        <IconFileCheck color="#D79B64" />
-                        <p>{resultado?.description}</p>
+                        <IconSettings color="#D79B64" />
+                        <p>Custo estimado: {resultado?.costEtimate}</p>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
+                        <IconListSearch color="#D79B64" />
+                        <p>Quantidade de tuplas pesquisadas: {resultado?.searchTuplesQuantity}</p>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
+                        <IconClockHour4 color="#D79B64" />
+                        <p>Tempo: {resultado?.runtime}</p>
                       </div>
                       <table style={{ width: "100%", borderCollapse: "collapse" }}>
                         <thead>
@@ -237,14 +247,6 @@ function App() {
                           ))}
                         </tbody>
                       </table>
-                      <div style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
-                        <IconBook color="#D79B64" />
-                        <p>Página: {resultado?.page}</p>
-                      </div>
-                      <div style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
-                        <IconClockHour4 color="#D79B64" />
-                        <p>Tempo: {resultado?.runtime}</p>
-                      </div>
                     </div>
                   ) : (
                     <div style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
