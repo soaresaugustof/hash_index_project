@@ -16,6 +16,7 @@ function App() {
   const [formState, setFormState] = useState(0);
   const [resultado, setResultado] = useState(null);
   const [dadosDoFill, setDadosDoFill] = useState();
+  const [loadingFillData, setLoadingFillData] = useState(true);
 
   //if (error) return <div>Erro ao buscar dados da API</div>;
   //if (!resultados) return <div>Carregando...</div>;
@@ -38,25 +39,19 @@ function App() {
     setChamadas(chamadas + 1)
   }
 
-  const fetchData = async () => {
-    try {
-      const response1 = await axios.post(
-        "http://localhost:5051/api/hash/book"
-      );
-
-      const response2 = await axios.post(
-        "http://localhost:5051/api/hash/fill"
-      );
-
-      console.log("Response from /api/hash/book:", response1.data);
-      console.log("Response from /api/hash/fill:", response2.data);
-      setDadosDoFill(response2.data);
-      incrementarChamadas()
-      incrementarChamadas()
-      console.log(chamadas)
-    } catch (error) {
-      console.error("Erro ao fazer requisição: ", error);
-    }
+  const fetchData = () => {
+    axios.post("http://localhost:5051/api/hash/book")
+      .then(response1 => {
+        return axios.post("http://localhost:5051/api/hash/fill");
+      })
+      .then(response2 => {
+        setDadosDoFill(response2.data);
+        setLoadingFillData(false); // Set loading to false when data is fetched
+      })
+      .catch(error => {
+        console.error("Erro ao fazer requisição: ", error);
+        setLoadingFillData(false); // Handle error case and set loading to false
+      });
   };
 
   const onSubmit = async (e) => {
@@ -169,7 +164,7 @@ function App() {
   };
 
   useEffect(() => {
-    fetchData();
+    fetchData(); 
   }, []);
 
   return (
@@ -204,13 +199,19 @@ function App() {
           <section className="infos">
             <>
               <p>Taxa de colisão:</p>
-              <p>{dadosDoFill?.numeroColisoes}</p>
+              {loadingFillData ? ( // Display loading or data based on loading state
+                <div className="loader"/>
+              ) : (
+                <p>{dadosDoFill?.numeroColisoes}</p>
+              )}
             </>
             <>
               <p>Taxa de overflow:</p>
-              <p>
-                {dadosDoFill?.numeroOverflows}
-              </p>
+              {loadingFillData ? ( // Display loading or data based on loading state
+                <div className="loader"/>
+              ) : (
+                <p>{dadosDoFill?.numeroOverflows}</p>
+              )}
             </>
             <>
               <p>Estimativa de custo:</p>

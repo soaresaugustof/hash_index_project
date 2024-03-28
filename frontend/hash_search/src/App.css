@@ -123,3 +123,16 @@ button:hover {
     visibility: visible; /* Make the element visible when shown */
   }
   
+.loader {
+  width: 15px;
+  height: 15px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  animation: l5 1s infinite linear alternate;
+}
+@keyframes l5 {
+  0%   {box-shadow: 20px 0 #D79B64, -20px 0 #E6C3A0; background: #D79B64 }
+  33%  {box-shadow: 20px 0 #D79B64, -20px 0 #E6C3A0; background: #E6C3A0}
+  66%  {box-shadow: 20px 0 #E6C3A0, -20px 0 #D79B64; background: #E6C3A0}
+  100% {box-shadow: 20px 0 #E6C3A0, -20px 0 #D79B64; background: #D79B64 }
+}
