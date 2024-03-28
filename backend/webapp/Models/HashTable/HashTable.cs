@@ -11,6 +11,7 @@ namespace webapp.Models.HashTable
         private int numeroOverflows;
         private int numeroColisoes;
         private int numeroElementosAdicionados;
+        private int quantidadeBuckets;
 
         // Conjunto de Buckets da Hash Table
         private Bucket[] buckets;
@@ -26,6 +27,7 @@ namespace webapp.Models.HashTable
                 Math.Round(quantidadeTotalRegistros / quantidadeRegistrosPorBuckets);
 
             buckets = new Bucket[quantidadeBuckets];
+            quantidadeBuckets = buckets.Length;
             this.registrosPorBucket = quantidadeRegistrosPorBuckets;
         }
 
@@ -132,7 +134,7 @@ namespace webapp.Models.HashTable
         public int NumeroOverflows => numeroOverflows;
         public int NumeroColisoes => numeroColisoes;
         public int NumeroElementosAdicionados => numeroElementosAdicionados;
-
+        public int QuantidadeBuckets => quantidadeBuckets;
         public Bucket[] Buckets => buckets;
     }
 }
