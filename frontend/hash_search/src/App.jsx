@@ -6,10 +6,7 @@ import useSWR from "swr";
 import axios from "axios";
 import { IconSearch, IconArrowBack, IconKey, IconGridScan, IconAbc, IconBook, IconClockHour4, IconFileCheck, IconMoodSad } from '@tabler/icons-react';
 
-// const fetcher = (url, quantidade) => fetch(`${url}?quantidade=${quantidade}`).then((res) => res.json());
-
 function App() {
-  const [pagina, setPagina] = useState(1);
   const [chamadas, setChamadas] = useState(0);
   const [tuplas, setTuplas] = useState(10);
   const [chave, setChave] = useState("");
@@ -17,30 +14,14 @@ function App() {
   const [resultado, setResultado] = useState(null);
   const [dadosDoFill, setDadosDoFill] = useState();
   const [loadingFillData, setLoadingFillData] = useState(true);
-
-  //if (error) return <div>Erro ao buscar dados da API</div>;
-  //if (!resultados) return <div>Carregando...</div>;
-
-  //const [resultado, setResultado] = useState([]);
-
-  const handleSubmit = (quantidade) => {
-    //Requisição para o backend
-    //Exemplo:
-    /**
-     * const handleSubmit = (quantidade) => {
-      fetchResultados(quantidade)
-      .then((data) => setResultados(data))
-      .catch((error) => console.error('Erro ao obter resultados:', error));
-  };
-     */
-  };
+  const [qtdRegs, setQtdRegs] = useState(100);
 
   const incrementarChamadas = () => {
     setChamadas(chamadas + 1)
   }
 
   const fetchData = () => {
-    axios.post("http://localhost:5051/api/hash/book")
+    axios.post(`http://localhost:5051/api/hash/book/${qtdRegs}`)
       .then(response1 => {
         return axios.post("http://localhost:5051/api/hash/fill");
       })
@@ -71,7 +52,7 @@ function App() {
         case 2:
           requestData = { tuplas };
           response = await axios.get(
-            `http://localhost:5051/api/hash/first/${pagina}/${tuplas}`
+            `http://localhost:5051/api/hash/first/${tuplas}`
           );
           incrementarChamadas()
           break;
@@ -121,14 +102,6 @@ function App() {
                 onChange={(e) => setTuplas(e.target.value)}
               />
             </div>
-            <div>
-              <p>Página:</p>
-              <input
-                type="number"
-                value={pagina}
-                onChange={(e) => setPagina(e.target.value)}
-              />
-            </div>
             <button
               type="button"
               onClick={() => {
@@ -163,10 +136,6 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    fetchData(); 
-  }, []);
-
   return (
     <div>
       <form
@@ -184,6 +153,17 @@ function App() {
             <h2>Campos de busca</h2>
           </div>
           <section className="pesquisa">
+            <div className="searchArrange">
+              <input 
+                type="number"
+                value={qtdRegs}
+                onChange = {(e) => setQtdRegs(e.target.value)}
+              />
+              <button 
+                type="submit"
+                onClick={() => fetchData()}
+              >Carregar hash</button>
+            </div>
             <div className="searchArrange">{switchButtonClick()}</div>
             {formState !== 0 && (
               <div className="searchArrange">
