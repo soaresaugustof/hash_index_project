@@ -48,17 +48,14 @@ namespace backend.Models
             }
         }
 
+        public int QuantidadePaginas => pages.Length;
+
+        public int QuantidadeRegistrosPagina => pages[0].QuantidadeRegistros;
+
         public Page[] Pages
         {
             get => pages;
             set => pages = value;
         }
-
-        public int QuantidadePaginas
-        {
-            get => pages.Length;
-        }
-
-        public int QuantidadeRegistrosPagina => pages[0].QuantidadeRegistros;
     }
 }

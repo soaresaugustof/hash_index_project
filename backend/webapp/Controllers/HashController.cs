@@ -27,8 +27,8 @@ public class HashController : ControllerBase
     /// Método prioritário. Deve ser o <b>PRIMEIRO</b> método a ser chamado
     /// </summary>
     /// <returns>Lista de páginas baseada no input do arquivo TXT</returns>
-    [HttpPost("book")]
-    public ActionResult<Page[]> InitBook()
+    [HttpPost("book/{qntRegs:int}")]
+    public ActionResult<Book> InitBook(int qntRegs)
     {
         // InitBook
         // 1. Stream Reader lê o arquivo e preenche um array com ele
@@ -56,14 +56,14 @@ public class HashController : ControllerBase
 
         // 2. Cria a entidade Book baseada no valor do tamanho do Array
         // TODO: Criar um atributo de Query String que torne esse "100" alterável
-        book = new Book(lines.Length, parameter);
+        book = new Book(lines.Length, qntRegs);
 
         // DEBUG:
         // Console.WriteLine(book.QuantidadePaginas);
 
         for (int i = 0; i < lines.Length; i += book.Pages[0].QuantidadeRegistros)
         {
-            Page page = new Page(lines.Skip(i).Take(parameter).ToArray());
+            Page page = new Page(lines.Skip(i).Take(qntRegs).ToArray());
             book.AddPage(page);
         }
 
@@ -72,15 +72,15 @@ public class HashController : ControllerBase
 
         // Init hash table
         // TODO: Criar um atributo de Query String que torne esse "10" alterável
-        InitHashTable(lines);
+        InitHashTable(lines, qntRegs);
 
-        return book.Pages;
+        return book;
     }
 
-    [HttpPost("table")]
-    public ActionResult<HashTable> InitHashTable(string[] lines)
+    [HttpPost("table/{qntRegs:int}")]
+    public ActionResult<HashTable> InitHashTable(string[] lines, int qntRegs)
     {
-        hashTable = new HashTable(lines.Length, parameter);
+        hashTable = new HashTable(lines.Length, qntRegs);
 
         return hashTable;
     }
@@ -190,19 +190,32 @@ public class HashController : ControllerBase
             : NoContent();
     }
 
-    [HttpGet("first/{page:int}/{quantity:int}")]
-    public ActionResult<string[]> GetFirstTuples(int page, int quantity)
+    [HttpGet("first/{quantity:int}")]
+    public ActionResult<string[]> GetFirstTuples(int quantity)
     {
         watch = new Stopwatch();
         string formatTimeSpan = null;
 
         string[] xFirstTuples = new string[quantity];
-        var pagesWordList = book.Pages[page].WordsList;
 
-        for (int i = 0; i < xFirstTuples.Length; i++)
+        int i = 0;
+        int costCount = 1;
+
+        foreach (var page in book.Pages)
         {
-            // xFirstTuples[i] = GetWordCommon(wordList[i]).Value;
-            xFirstTuples[i] = GetWordCommon(pagesWordList[i]);
+            foreach (var wordInList in page.WordsList)
+            {
+                if (i >= quantity)
+                    break;
+
+                xFirstTuples[i] = wordInList;
+                i++;
+            }
+
+            if (i >= quantity)
+                break;
+
+            costCount++;
         }
 
         watch.Stop();
@@ -213,18 +226,17 @@ public class HashController : ControllerBase
                 new
                 {
                     status = 200,
-                    description = $"Table Scan das {quantity} primeiras linhas da página {page}",
-                    page = page,
                     searchTuplesQuantity = quantity,
-                    xFirstTuples = xFirstTuples,
-                    runtime = formatTimeSpan
+                    costEtimate = costCount,
+                    runtime = formatTimeSpan,
+                    xFirstTuples = xFirstTuples
                 }
             )
             : NoContent();
     }
 
     [HttpGet("common/{word}")]
-    public string GetWordCommon(string word)
+    public ActionResult<string> GetWordCommon(string word)
     {
         watch = new Stopwatch();
         string formatTimeSpan = null;
@@ -253,7 +265,18 @@ public class HashController : ControllerBase
         watch.Stop();
         formatTimeSpan = FormatedTimeSpan();
 
-        return foundWord;
+        return foundWord != null
+            ? Ok(
+                new
+                {
+                    status = 200,
+                    foundWord = foundWord,
+                    page = foundWordPage,
+                    searchTuplesQuantity = costCount,
+                    runtime = formatTimeSpan
+                }
+            )
+            : NoContent();
     }
 
     // *** UTILs Methods ***
